@@ -1,0 +1,44 @@
+.img-detalle {
+    text-align: center;  
+}
+
+.descripcion-detalle {
+    background-color: white;
+    border-color: black;
+    border-radius: 10px;
+    border-style:double;
+    height: 300px;
+    width: 98%;
+}
+
+img {
+    height: 340px;
+}
+
+.row {
+    /*background-image: url("../assets/images/fondo.jpg");*/
+    background-color: rgb(154, 204, 154, 0.2);
+    background-size: 100%;
+    margin-top: 30px;
+    padding-bottom: 25px;
+    --bs-gutter-x: 0;
+}
+
+h2 {
+    color: #fe0404;
+    font-size: 1.0in;
+    font-family:  Arial, Helvetica, sans-serif;
+}
+
+p {
+    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #161111;
+}
+
+.btn-volver {
+    color:#3b0afe;
+    font-family:  Arial, Helvetica, sans-serif;
+    font-size: 0.35in;
+    text-decoration: none;
+}
