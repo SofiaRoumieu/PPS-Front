@@ -5,7 +5,7 @@ import Inicio from '../pages/Inicio';
 import Login from '../pages/Login/Login';
 
 import CarrerasListado from '../pages/Carreras/CarrerasListado';
-import CarrerasForm from '../pages/Carreras/CarrerasForm';
+import CarrerasMateria from '../pages/Carreras/CarrerasMateria';
 import CursosListado from '../pages/Cursos/CursosListado';
 import CursoForm from '../pages/Cursos/CursoForm';
 import Institucional from '../pages/Institucional/Institucional';
@@ -21,7 +21,7 @@ const Ruteador = () => {
                 <Route path="/" element={<Inicio  />} />
                 <Route path="/login" element={<Login />} /> 
                 <Route path="/carreras" element={<CarrerasListado />} />
-                <Route path="/carrera-detalle" element={<CarrerasForm />} />
+                <Route path="/carrera-detalle" element={<CarrerasMateria />} />
                 <Route path="/mis-cursos" element={<CursosListado tipo="misCursos" />} />
                 <Route path="/cursos" element={<CursosListado tipo="todos"/>} />
                 <Route path="/curso-detalle" element={<CursoForm tipo="verDetalle"/>} />
