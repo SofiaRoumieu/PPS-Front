@@ -19,7 +19,7 @@ const Ruteador = () => {
         <Router>
             <Routes>
                 <Route path="/" element={<Inicio  />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/login" element={<Login />} /> 
                 <Route path="/carreras" element={<CarrerasListado />} />
                 <Route path="/carrera-detalle" element={<CarrerasForm />} />
                 <Route path="/mis-cursos" element={<CursosListado tipo="misCursos" />} />
@@ -29,7 +29,7 @@ const Ruteador = () => {
                 <Route path="/curso-detalle" element={<CursoForm tipo="crear"/>} />
                 <Route path="/institucional" element={<Institucional />} />
                 <Route path="/novedades" element={<NovedadesListado />} />
-                <Route path="/novedades-detalle" element={<NovedadesForm tipo="verDetalle"/>} />
+                <Route path="/novedades-detalle/:id" element={<NovedadesForm tipo="verDetalle"/>} />
                 <Route path="/novedades-editar/:id" element={<NovedadesForm  tipo="editar"/>} />
                 <Route path="/novedades-editar" element={<NovedadesForm  tipo="crear"/>} />
                

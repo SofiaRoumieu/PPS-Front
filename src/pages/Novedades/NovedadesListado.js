@@ -6,15 +6,44 @@ import Detalle from '../Detalle';
 import campus from '../../assets/images/campus.png';
 import {useNavigate} from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
-import Novedades from "../../storage/Novedades";
+//import Novedades from "../../storage/Novedades";
+
+const URL = 'https://localhost:44349/';
 
 const NovedadesListado = () => {
     const navigate = useNavigate();
-    const [novedades, setNovedades] = useState(Novedades);
-
+    const [novedades, setNovedades] = useState([]);
+    const [cargando, setCargando] = useState(false);
 
     useEffect(() => {
-       
+        if (!novedades.length) {
+            console.log("fetch");
+            setCargando(true);
+            fetch(URL + 'api/Publico/Novedades')
+            .then((res) => res.ok ? res.json() : Promise.reject(res))
+            .then((data) => {
+                console.log(data);
+                data.forEach((novedad) => {
+                    setNovedades((novedadesGuardados) => {
+                        return [
+                            ...novedadesGuardados, 
+                            {
+                                idNovedad: novedad.id,
+                                titulo: novedad.titulo,
+                                copete: novedad.copete,
+                                carrucel: (novedad.snMostrar == 1) ? true : false
+                            }
+                        ];
+                    });
+                });
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+            .finally(() => {
+                setCargando(false);
+            });
+        }
     }, []);
 
     return (
@@ -51,7 +80,7 @@ const NovedadesListado = () => {
                 </Row>
                 <Row>
                     { novedades.map((novedad) => {
-                        return <Col xs="3" lg="3" key={novedad.id}>
+                        return <Col xs="3" lg="3" key={novedad.idNovedad}>
                             <Card>
                                 <div >
                                     <label>{novedad.titulo}</label>
@@ -61,7 +90,7 @@ const NovedadesListado = () => {
                                 
                                 <Button 
                                     style={{width: "100%", background: "#009AAE", borderColor: "#009AAE", color: "#FFFFFF"}}
-                                    onClick={()=>{localStorage.setItem('novedad',  JSON.stringify(novedad)); navigate('/novedades-detalle')}} 
+                                    onClick={()=>{navigate('/novedades-detalle/' + novedad.idNovedad)}} 
                                 >
                                     Leer novedad
                                 </Button>

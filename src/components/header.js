@@ -3,27 +3,27 @@ import '../styles/Header.css';
 import { Button, Nav, Row, Col, Form, Card } from 'react-bootstrap';
 import { Formik, ErrorMessage } from 'formik';
 import * as Yup from "yup";
-import Usuarios from "../storage/Usuarios";
 
 const formSchema = Yup.object().shape({
-    nombreUsuario: Yup.string()
+    correo: Yup.string()
       .required("Campo requerido"),  
     pass: Yup.string()
     .required("Campo requerido"),
   });
 
+const URL = 'https://localhost:44349/';
+
 const Header = () => {
     const usuarioAux = localStorage.getItem('usuario');
-    const [usuario, setUsuario] = useState({legajo:'',nombreUsuario:'', rol:'', pass: ''});
+    const [usuario, setUsuario] = useState({legajo:'',correo:'', rol:'', pass: ''});
     const [mostrarLogin, setMostrarLogin] = useState(false);
 
-    const [usuarios, setUsuarios] = useState(Usuarios);
-    const [initialValues, setInitialValues] = useState({nombreUsuario: '', pass: ''});
+    const [initialValues, setInitialValues] = useState({correo: '', pass: ''});
 
 
     useEffect(() => {
         if(localStorage.getItem("usuario"))    
-            setUsuario(JSON.parse(localStorage.getItem("usuario")))
+            setUsuario(JSON.parse(localStorage.getItem("usuario")));
     }, []);
 
     // useEffect(() => {
@@ -35,19 +35,52 @@ const Header = () => {
 
     function cerrarSesion(){
         localStorage.clear();
-        setUsuario({legajo:'',nombreUsuario:'', rol:'', pass: ''});
+        setUsuario({legajo:'', correo:'', rol:'', pass: ''});
         window.location.assign("/");
     }
 
     const Ingresar = (values) => {
-        let usuarioAux = usuarios.find(element => element.nombreUsuario === values.nombreUsuario && element.pass === values.pass );
-        if(usuarioAux!= undefined){
-            localStorage.setItem("usuario",  JSON.stringify(usuarioAux));
-            window.location.assign("/");
-        }
-        else{
-            window.location.assign("/");
-        }
+        const usuarioAux = {
+            correo: values.correo,
+            clave: values.pass,
+        };
+        
+        const options = {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(usuarioAux),
+        };
+
+        console.log("Ingresar");
+        fetch(URL + 'api/Usuarios/Login', options)
+            .then((res) => res.ok ? res.json() : Promise.reject(res))
+            .then((data) => {
+                console.log(data);
+                    setUsuario(
+                    {
+                        legajo: data.id,
+                        correo: data.titulo,
+                        rol: (data.tipoUsuario == 1) ? "Alumno" : (data.tipoUsuario == 2) ? "Profesor" : "Administrativo"
+                    });
+
+                    localStorage.setItem("usuario",  JSON.stringify(data));
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+            .finally(() => {
+                window.location.assign("/");
+            });
+        //let usuarioAux = usuarios.find(element => element.nombreUsuario === values.nombreUsuario && element.pass === values.pass );
+        // if(usuarioAux!= undefined){
+        //     localStorage.setItem("usuario",  JSON.stringify(usuarioAux));
+        //     window.location.assign("/");
+        // }
+        // else{
+        //     window.location.assign("/");
+        // }
     };
 
     return (
@@ -55,12 +88,12 @@ const Header = () => {
             <Row>   
                 <Col lg="10"></Col>
                 <Col lg="2">
-                    {usuario.legajo == '' ?
+                    {!localStorage.getItem('usuario') ?
                     <Button  onClick={()=>{setMostrarLogin(true);}}> Iniciar sesión</Button>
                     :
                     <>
                         <Button onClick={cerrarSesion}> Cerrar sesión</Button>
-                        <label>{usuario.nombreUsuario} - {usuario.rol}</label>
+                        <label>{JSON.parse(localStorage.getItem("usuario")).correo} - {JSON.parse(localStorage.getItem("usuario")).rol}</label>
                     </>
                     }
                 </Col></Row>
@@ -71,37 +104,37 @@ const Header = () => {
                             <Nav.Link href="/">Inicio</Nav.Link>
                         </Nav.Item>
                             
-                        {(usuario.legajo !== '' && (usuario.rol === "Alumno" || usuario.rol === "Profesor")) &&
+                        {(localStorage.getItem("usuario") && JSON.parse(localStorage.getItem("usuario")).legajo !== '' && (JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 1 || JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 2)) &&
                             <Nav.Item>
                                 <Nav.Link href="/mis-cursos">Mis cursos</Nav.Link>
                             </Nav.Item>
                         }
-                        {(usuario.legajo !== '' && usuario.rol === "Alumno") &&
+                        {(localStorage.getItem("usuario") && JSON.parse(localStorage.getItem("usuario")).legajo !== '' && JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 1) &&
                             <Nav.Item>
                                 <Nav.Link href="/cursos">Materias del plan</Nav.Link>
                             </Nav.Item>
                         }
-                        {(usuario.legajo !== '' && usuario.rol === "Profesor" ) &&
+                        {(localStorage.getItem("usuario") && JSON.parse(localStorage.getItem("usuario")).legajo !== '' && JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 2 ) &&
                             <Nav.Item>
                                 <Nav.Link href="/carreras">Vacantes</Nav.Link>
                             </Nav.Item>
                         }
-                        {(usuario.legajo !== '' && (usuario.rol === "Alumno" || usuario.rol === "Profesor")) &&
+                        {(localStorage.getItem("usuario") && JSON.parse(localStorage.getItem("usuario")).legajo !== '' && (JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 1 || JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 2)) &&
                             <Nav.Item>
                                 <Nav.Link href="/carreras">Mis novedades</Nav.Link>
                             </Nav.Item>
                         }
-                        {(usuario.legajo !== '' && usuario.rol === "Administrativo" ) &&
+                        {(localStorage.getItem("usuario") && JSON.parse(localStorage.getItem("usuario")).legajo !== '' && JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 3) &&
                             <Nav.Item>
                                 <Nav.Link href="/carreras">Novedades</Nav.Link>
                             </Nav.Item>
                         }
-                        {(usuario.legajo !== '' && usuario.rol === "Administrativo" ) &&
+                        {(localStorage.getItem("usuario") && JSON.parse(localStorage.getItem("usuario")).legajo !== '' && JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 3 ) &&
                             <Nav.Item>
                                 <Nav.Link href="/carreras">Usuarios</Nav.Link>
                             </Nav.Item>
                         }
-                        {(usuario.legajo !== '' && usuario.rol === "Administrativo" ) &&
+                        {(localStorage.getItem("usuario") && JSON.parse(localStorage.getItem("usuario")).legajo !== '' && JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 3 ) &&
                             <Nav.Item>
                                 <Nav.Link href="/carreras">Cursos</Nav.Link>
                             </Nav.Item>
@@ -136,18 +169,18 @@ const Header = () => {
                         </Row>
                         <Row >
                             <Col xs lg="12">
-                            <Form.Group controlId="nombreUsuario">
-                                <Form.Label style={{ ...{color: "black"}}}>Usuario: </Form.Label>
+                            <Form.Group controlId="correo">
+                                <Form.Label style={{ ...{color: "black"}}}>E-mail: </Form.Label>
                                 <Form.Control
                                 type="text"
-                                name="nombreUsuario"
+                                name="correo"
                                 autoComplete='off'
                                 onChange={handleChange}
-                                value={values.nombreUsuario}
+                                value={values.correo}
                                 />
                             </Form.Group>
                             <ErrorMessage
-                                    name='nombreUsuario'
+                                    name='correo'
                                     component='div'
                                     className='field-error text-danger'
                                 /> 

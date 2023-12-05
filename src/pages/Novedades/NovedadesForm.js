@@ -10,8 +10,10 @@ import { Formik, Field, ErrorMessage } from "formik";
 
 
 const NovedadForm = (props) => {
+    const URL = 'https://localhost:44349/';
     const navigate = useNavigate();
     const formikRef = useRef();
+    const { id } = useParams();
 
    // const [initialValues, setInitialValues] = useState({idNovedad:'',titulo:'', texto:'', carrucel:false});
     const [novedad, setNovedad] = useState({idNovedad:'',titulo:'', texto:'', carrucel:false});
@@ -40,9 +42,24 @@ const NovedadForm = (props) => {
 
     useEffect(() => {
         if (props.tipo == "editar" || props.tipo == "verDetalle") {
-            if(localStorage.getItem('novedad')){
-                setNovedad(JSON.parse(localStorage.getItem('novedad')));
-            }
+            fetch(URL+'api/Publico/GetNovedadById/'+ id)
+            .then((res) => res.ok ? res.json() : Promise.reject(res))
+            .then((data) => {
+                console.log(data);
+                setNovedad({
+                            id: data.id,
+                            titulo: data.titulo,
+                            copete: data.copete,
+                            texto:data.texto,
+                            carrucel: (data.snMostrar==1)? true : false
+                        });
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+            .finally(() => {
+                setCargando(false);
+            });
         }
         setCargando(false);
 
