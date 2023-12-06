@@ -119,11 +119,11 @@ const Header = () => {
                                 <Nav.Link href="/carreras">Vacantes</Nav.Link>
                             </Nav.Item>
                         }
-                        {/* {(localStorage.getItem("usuario") && JSON.parse(localStorage.getItem("usuario")).legajo !== '' && (JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 1 || JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 2)) &&
+                        {(localStorage.getItem("usuario") && JSON.parse(localStorage.getItem("usuario")).legajo !== '' && (JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 1 || JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 2)) &&
                             <Nav.Item>
-                                <Nav.Link href="/carreras">Mis novedades</Nav.Link>
+                                <Nav.Link href="/notas">Mis Notas</Nav.Link>
                             </Nav.Item>
-                        } */}
+                        }
                         {(localStorage.getItem("usuario") && JSON.parse(localStorage.getItem("usuario")).legajo !== '' && JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 3) &&
                             <Nav.Item>
                                 <Nav.Link href="/carreras">Novedades</Nav.Link>
