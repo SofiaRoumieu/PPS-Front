@@ -11,7 +11,7 @@ const formSchema = Yup.object().shape({
     .required("Campo requerido"),
   });
 
-const URL = 'https://localhost:44349/';
+const URL = process.env.REACT_APP_BACKEND_CONNECTION; 
 
 const Header = () => {
     const usuarioAux = localStorage.getItem('usuario');

@@ -7,7 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import DataTable from 'react-data-table-component';
 import dataTableStyles from '../../styles/dataTableStyles';
 
-const URL = 'https://localhost:7151/api/';
+const URL = process.env.REACT_APP_BACKEND_CONNECTION; 
 
 
 const InitialMaterias = [];
@@ -26,7 +26,7 @@ const NovedadForm = (props) => {
         var carrera = JSON.parse(localStorage.getItem('carrera'));
         console.log(carrera.id)
 
-        fetch(URL + 'Publico/Materias/' + carrera.id, {
+        fetch(URL + 'api/Publico/Materias/' + carrera.id, {
             method: "GET",
             headers: {
                 "Content-Type": "Application/json",

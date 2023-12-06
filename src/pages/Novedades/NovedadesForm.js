@@ -10,7 +10,7 @@ import { Formik, Field, ErrorMessage } from "formik";
 
 
 const NovedadForm = (props) => {
-    const URL = 'https://localhost:44349/';
+    const URL = process.env.REACT_APP_BACKEND_CONNECTION; 
     const navigate = useNavigate();
     const formikRef = useRef();
     const { id } = useParams();

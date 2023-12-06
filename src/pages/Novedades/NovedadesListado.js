@@ -8,7 +8,7 @@ import {useNavigate} from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 //import Novedades from "../../storage/Novedades";
 
-const URL = 'https://localhost:44349/';
+const URL = process.env.REACT_APP_BACKEND_CONNECTION; 
 
 const NovedadesListado = () => {
     const navigate = useNavigate();

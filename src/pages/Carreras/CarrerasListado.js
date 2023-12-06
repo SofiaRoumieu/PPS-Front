@@ -5,7 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 
 
-const URL = 'https://localhost:7151/api/';
+const URL = process.env.REACT_APP_BACKEND_CONNECTION; 
 
 const CarrerasListado = () => {
     const navigate = useNavigate();

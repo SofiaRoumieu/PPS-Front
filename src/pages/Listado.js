@@ -5,7 +5,7 @@ import {Row, Col, Card } from 'react-bootstrap';
 import Spinner from '../components/Spinner';
 import Detalle from './Detalle';
 
-const URL = 'https://pokeapi.co/api/v2/pokemon/?limit=20';
+const URL = process.env.REACT_APP_BACKEND_CONNECTION; 
 
 const Listado = () => {
     const [pokemones, setPokemones] = useState([]);
