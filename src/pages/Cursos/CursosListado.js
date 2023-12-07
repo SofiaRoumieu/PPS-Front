@@ -36,22 +36,26 @@ const CursosListado = (props) => {
                 })
                 .catch(ex => console.log(ex))
         } else {
-
-            fetch(URL + 'Cursos/' + usuario.legajo, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    console.log('MisCursos', data);
-                    setCursos(data);
-                })
-                .catch(ex => console.log(ex))
+            getCursadasAlumno();
         }
 
     }, []);
+
+    const getCursadasAlumno = () => {
+        fetch(URL + 'Cursos/' + usuario.legajo, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log('MisCursos', data);
+                setCursos(data);
+            })
+            .catch(ex => console.log(ex))
+
+    }
 
     const handleInscribir = (e) => {
         console.log('USUARIO', usuario)
@@ -65,11 +69,27 @@ const CursosListado = (props) => {
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log('MisCursos', data);
-                setCursos(data);
+                console.log('Inscrito', data);
+                // setCursos(data);
             })
             .catch(ex => console.log(ex.message))
+    }
+    const handleDarDeBaja = (e) => {
+        console.log('USUARIO', usuario)
+        console.log("DAR DE BAJA", e.target.value);
 
+        fetch(URL + 'Cursos/Baja/' + usuario.legajo + '/' + e.target.value, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log('SE DIO DE BAJA', data);
+                getCursadasAlumno();
+            })
+            .catch(ex => console.log(ex.message))
     }
 
     const columns = [
@@ -159,7 +179,7 @@ const CursosListado = (props) => {
                                             <Button onClick={() => { localStorage.setItem('curso', JSON.stringify(curso)); navigate('/curso-detalle') }}>
                                                 Ver curso
                                             </Button>
-                                            <Button onClick={() => { localStorage.setItem('curso', JSON.stringify(curso)); navigate('/curso-detalle') }}>
+                                            <Button value={curso.id} onClick={handleDarDeBaja}>
                                                 Darme de baja
                                             </Button>
                                         </Card.Footer>
