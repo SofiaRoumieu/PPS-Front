@@ -43,3 +43,14 @@
     transform: rotate(360deg);
   }
 }
+
+.card-material{
+  margin: 15px;
+  background-color: red;
+}
+
+
+.row-materiales{
+  background-color: red;
+  padding: 10px;
+}

@@ -21,63 +21,94 @@ const CursosListado = (props) => {
 
     useEffect(() => {
         console.log("CURSOS");
-        fetch(URL + 'Cursos/' + 1, {
-            method: "GET",
+
+        if (props.tipo === "todos") {
+            fetch(URL + 'Cursos/ParaInscribir', {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log('CursosParaInscribir', data);
+                    setCursos(data);
+                })
+                .catch(ex => console.log(ex))
+        } else {
+
+            fetch(URL + 'Cursos/' + usuario.legajo, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log('MisCursos', data);
+                    setCursos(data);
+                })
+                .catch(ex => console.log(ex))
+        }
+
+    }, []);
+
+    const handleInscribir = (e) => {
+        console.log('USUARIO', usuario)
+        console.log("INSCRIBIR", e.target.id);
+
+        fetch(URL + 'Cursos/Inscribir/' + usuario.legajo + '/' + e.target.id, {
+            method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             }
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log('ladata', data);
+                console.log('MisCursos', data);
                 setCursos(data);
             })
-            .catch(ex => console.log(ex))
+            .catch(ex => console.log(ex.message))
 
-
-        if (props.tipo === "todos") {
-            setCursos(Cursos);
-        }
-    }, []);
+    }
 
     const columns = [
         {
             name: 'Materia',
             selector: row => row?.materia,
             sortable: true,
-            center: true,
+            center: true
         },
 
         {
             name: 'Profesor',
             selector: row => row?.profesor,
             sortable: true,
-            center: true,
+            center: true
         },
         {
             name: 'Dia',
             selector: row => row?.dia,
             sortable: true,
-            center: true,
+            center: true
         },
         {
             name: 'Turno',
             selector: row => row?.turno,
             sortable: true,
-            center: true,
+            center: true
         },
         {
             name: "Acciones",
             cell: (row) => (
-                <>
-
-                </>
+                <div id={row.id} onClick={handleInscribir} >
+                    Inscribirme
+                </div>
             ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            button: true,
-            minWidth: "80px",
-            maxWidth: "80px",
+            // allowOverflow: true,
+            // button: true,
+            // minWidth: "80px",
+            // maxWidth: "80px",
         },
     ];
 
@@ -113,26 +144,26 @@ const CursosListado = (props) => {
                 <Row>
                     {
                         cursos.map((curso) => {
-                            return <Col xs="3" lg="3" key={curso.id}>
+                            return <Col xs={12} md={4} key={curso.id}>
                                 <Card>
-                                    <div style={{ margin: 10, height: 50 }}>
-                                        <label>{curso.materia}</label>
-                                        <br></br>
-                                        <label>{curso.profesor}</label>
-                                    </div>
-                                    <Button
-                                        style={{ width: "100%", background: "#009AAE", borderColor: "#009AAE", color: "#FFFFFF" }}
-                                        onClick={() => { localStorage.setItem('curso', JSON.stringify(curso)); navigate('/curso-detalle') }}
-                                    >
-                                        Ver curso
-                                    </Button>
-
-                                    <Button
-                                        style={{ width: "100%", background: "#009AAE", borderColor: "#009AAE", color: "#FFFFFF" }}
-                                        onClick={() => { localStorage.setItem('curso', JSON.stringify(curso)); navigate('/curso-detalle') }}
-                                    >
-                                        Darme de baja
-                                    </Button>
+                                    <Card.Header>
+                                        <Card.Title>
+                                            {curso.materia}
+                                        </Card.Title>
+                                    </Card.Header>
+                                    <Card.Body>
+                                        <Card.Text>
+                                            {curso.dia} - {curso.turno} - {curso.profesor}
+                                        </Card.Text>
+                                        <Card.Footer >
+                                            <Button onClick={() => { localStorage.setItem('curso', JSON.stringify(curso)); navigate('/curso-detalle') }}>
+                                                Ver curso
+                                            </Button>
+                                            <Button onClick={() => { localStorage.setItem('curso', JSON.stringify(curso)); navigate('/curso-detalle') }}>
+                                                Darme de baja
+                                            </Button>
+                                        </Card.Footer>
+                                    </Card.Body>
                                 </Card>
                             </Col>;
                         })

@@ -18,6 +18,7 @@ const CursoDetalle = (props) => {
     const [curso, setCurso] = useState({ idCurso: '', materia: '', texto: '', carrucel: false });
     const [solapa, setSolapa] = useState("Materiales");
     const [alumnos, setAlumnos] = useState([]);
+    const [materiales, setMateriales] = useState([]);
 
     //botones del formulario
     const [botonProcesar, setBotonProcesar] = useState("Crear");
@@ -91,8 +92,27 @@ const CursoDetalle = (props) => {
             })
             .finally(() => {
             });
-
     }
+
+    const BuscarMateriales = () => {
+        fetch(URL + 'Cursos/Material/' + 1, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => res.ok ? res.json() : Promise.reject(res))
+            .then((data) => {
+                console.log('ssss', data);
+                setMateriales(data);
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+            .finally(() => {
+            });
+    }
+
 
     return (
         <>
@@ -136,7 +156,7 @@ const CursoDetalle = (props) => {
                                         </Row>
                                         <div className='row bg-primary'>
                                             <div className='col' >
-                                                <button className='btn btn-secondary' onClick={() => { setSolapa("Materiales") }} >Materiales</button>
+                                                <button className='btn btn-secondary' onClick={() => { setSolapa("Materiales"); BuscarMateriales() }} >Materiales</button>
                                             </div>
                                             <div className='col' >
                                                 <button className='btn btn-secondary' onClick={() => { setSolapa("Alumnos"); BuscarAlumnos() }}  >Alumnos</button>
@@ -144,10 +164,27 @@ const CursoDetalle = (props) => {
                                         </div>
                                         {
                                             solapa == 'Materiales' ?
-                                                <Row>
-                                                    <Col xs="12" lg="12">
-                                                        MATERIALES
-                                                    </Col>
+                                                <Row  >
+                                                    {materiales.length > 0 ?
+                                                        <Row className='row-materiales' >
+                                                            {
+                                                                materiales.map(mat => {
+                                                                    return <Card className='card-material' >
+                                                                        <Card.Title>
+                                                                            {mat.titulo}
+                                                                        </Card.Title>
+                                                                        <Card.Body>
+                                                                            {mat.texto}
+                                                                        </Card.Body>
+                                                                    </Card>
+                                                                })
+                                                            }
+
+                                                        </Row>
+                                                        :
+                                                        <Row>NO HAY MATERIALES</Row>
+                                                    }
+
                                                 </Row>
                                                 :
                                                 <Row>
@@ -174,7 +211,7 @@ const CursoDetalle = (props) => {
                                     <>
                                     </>
                             }
-                            <Row>
+                            {/* <Row>
                                 <Col xs="2" lg="2">
                                     <Button
                                         onClick={() => navigate('/cursos')}
@@ -199,7 +236,7 @@ const CursoDetalle = (props) => {
                                             }
                                         </Button>
                                     </Col>}
-                            </Row>
+                            </Row> */}
                         </Card>
                     </>)}
                 </Formik>
