@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Container, Row, Table } from 'react-bootstrap';
 
 const URL = process.env.REACT_APP_BACKEND_CONNECTION + 'api/';
 
@@ -25,27 +25,35 @@ const NotasListado = () => {
 
     }, []);
     return (
-        <>
+        <Container className='mt-3'>
+            <Row>
+                <h1>Listado de notas finales</h1>
+            </Row>
             {
                 listaNotas.length > 0 ?
-                    <>
-                        <Row>
-                            <Col className='fw-bold' >Materia</Col>
-                            <Col className='fw-bold' >Nota</Col>
-                            <Col className='fw-bold'>Fecha</Col>
-                        </Row>
-                        {listaNotas.map((nota) => {
-                            return <Row key={nota.idCursada}>
-                                <Col>{nota.tipoNota}</Col>
-                                <Col>{nota.notaNumerica}</Col>
-                                <Col>{nota.fecha.toString().slice(0, 10)}</Col>
-                            </Row>
-                        })}
-                    </>
+                    <Table striped bordered hover responsive>
+                        <thead>
+                            <tr>
+                                <th className='fw-bold' >Materia</th>
+                                <th className='fw-bold' >Nota</th>
+                                <th className='fw-bold'>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {listaNotas.map((nota) => {
+                                return <tr key={nota.nombreMateria}>
+                                    <td>{nota.nombreMateria}</td>
+                                    <td>{nota.notaNumerica}</td>
+                                    <td>{nota.fecha.toString().slice(0, 10)}</td>
+                                </tr>
+                            })}
+                        </tbody>
+                    </Table>
                     :
                     <>NO HAY NOTAS</>
             }
-        </>
+        </Container>
 
     );
 }

@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 
 const URL = process.env.REACT_APP_BACKEND_CONNECTION + 'api/';
 
 const CargaNotas = () => {
+    const navigate = useNavigate();
 
     const [alumnos, setAlumnos] = useState([]);
     const [curso, setCurso] = useState({});
 
     useEffect(() => {
-
         console.log(JSON.parse(localStorage.getItem('usuario')))
         console.log(JSON.parse(localStorage.getItem('curso')))
         if (localStorage.getItem('curso')) {
@@ -125,7 +126,7 @@ const CargaNotas = () => {
     }
 
     return (
-        <Container>
+        <Container fluid>
             <div className='d-flex justify-content-between align-items-center'>
                 <div className='mt-2'>
                     <h4 className='text-primary'>{curso.id} - {curso.materia} - {curso.dia} {curso.turno}</h4>
@@ -210,7 +211,20 @@ const CargaNotas = () => {
                     }
                 </tbody>
             </Table>
-            <Button className='mt-2' onClick={handleAccept} >Aceptar cambios</Button>
+            <Row>
+                <Col md='6'>
+                    <Button className='mt-2 w-100' onClick={handleAccept} >Aceptar cambios</Button>
+                </Col>
+                <Col md='6'>
+                    <Button variant="outline-primary"
+                        onClick={() => navigate('/curso-detalle')}
+                        type="button"
+                        className='mt-2 w-100' >
+                        Volver
+                    </Button>
+                </Col>
+            </Row>
+
 
         </Container>
     );

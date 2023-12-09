@@ -6,7 +6,7 @@
 }
 
 .listado {
-    color:rgba(26, 41, 26);
+    color: rgba(26, 41, 26);
     font-size: 30px;
     justify-content: center;
 }
@@ -16,5 +16,9 @@ a {
 }
 
 .h1 {
-    color:white;
+    color: white;
+}
+
+ul {
+    list-style: none;
 }

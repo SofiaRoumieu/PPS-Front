@@ -32,25 +32,24 @@
   text-align: left;
   font-size: 25px;
   justify-content: left;
-  
+
 }
 
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
 
-.card-material{
+.card-material {
   margin: 15px;
-  background-color: red;
 }
 
 
-.row-materiales{
-  background-color: red;
+.row-materiales {
   padding: 10px;
 }

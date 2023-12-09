@@ -72,7 +72,7 @@ const CursosListado = (props) => {
                 console.log('Inscrito', data);
                 // setCursos(data);
             })
-            .catch(ex => console.log(ex.message))
+            .catch(ex => console.log(ex))
     }
     const handleDarDeBaja = (e) => {
         console.log('USUARIO', usuario)
@@ -179,9 +179,14 @@ const CursosListado = (props) => {
                                             <Button onClick={() => { localStorage.setItem('curso', JSON.stringify(curso)); navigate('/curso-detalle') }}>
                                                 Ver curso
                                             </Button>
-                                            <Button value={curso.id} onClick={handleDarDeBaja}>
-                                                Darme de baja
-                                            </Button>
+                                            {
+                                                usuario.tipoUsuario == 1 ?
+                                                    <Button value={curso.id} onClick={handleDarDeBaja}>
+                                                        Darme de baja
+                                                    </Button>
+                                                    : <></>
+                                            }
+
                                         </Card.Footer>
                                     </Card.Body>
                                 </Card>

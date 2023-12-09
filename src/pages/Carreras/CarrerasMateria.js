@@ -7,7 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import DataTable from 'react-data-table-component';
 import dataTableStyles from '../../styles/dataTableStyles';
 
-const URL = process.env.REACT_APP_BACKEND_CONNECTION; 
+const URL = process.env.REACT_APP_BACKEND_CONNECTION;
 
 
 const InitialMaterias = [];
@@ -120,12 +120,9 @@ const NovedadForm = (props) => {
                                 />
                             </Row>
                             <Row>
-                                <Col xs="2" lg="2">
-                                    <Button
-                                        onClick={() => navigate('/carreras')}
-                                        type="button"
-                                        style={{ width: "100%", background: "#F2F2F2", borderColor: "#009AAE", color: "#009AAE" }}
-                                    >
+                                <Col xs="true" sm='2'>
+                                    <Button variant='outline-primary' className='w-75'
+                                        onClick={() => navigate('/carreras')} >
                                         {botonVolver}
                                     </Button>
                                 </Col>

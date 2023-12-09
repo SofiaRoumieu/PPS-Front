@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Card } from 'react-bootstrap';
+import { Row, Col, Card, Container } from 'react-bootstrap';
 import Spinner from '../../components/Spinner';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 
 
-const URL = process.env.REACT_APP_BACKEND_CONNECTION + 'api/'; 
+const URL = process.env.REACT_APP_BACKEND_CONNECTION + 'api/';
 
 const CarrerasListado = () => {
     const navigate = useNavigate();
@@ -36,7 +36,7 @@ const CarrerasListado = () => {
     }, []);
 
     return (
-        <div >
+        <Container >
             <ToastContainer
                 position="top-center"
                 autoClose={1500}
@@ -57,26 +57,30 @@ const CarrerasListado = () => {
                     :
                     <>
                         {carreras.map((facultad) => {
-                            return <Row >
-                                <Col xs="12" lg="12">
+                            return <Row className='m-1' >
+                                <Col >
                                     <Card>
                                         <Row>
                                             <h3>{facultad.nombreFacultad}</h3>
                                             <ul>
                                                 {facultad.carreras.map((carrera) => {
-                                                    return <li style={{ cursor: "pointer" }} onClick={() => { localStorage.setItem('carrera', JSON.stringify(carrera)); navigate('/carrera-detalle') }}>{carrera.nombre}</li>
+                                                    return <li >
+                                                        <span style={{ cursor: "pointer" }} onClick={() => { localStorage.setItem('carrera', JSON.stringify(carrera)); navigate('/carrera-detalle') }}>
+                                                            {carrera.nombre}
+                                                        </span>
+                                                    </li>
                                                 }
                                                 )}
                                             </ul>
                                         </Row>
                                     </Card>
                                 </Col>
-                            </Row>;
+                            </Row>
                         })
                         }
                     </>
             }
-        </div>
+        </Container>
     );
 }
 

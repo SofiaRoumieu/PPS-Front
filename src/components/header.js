@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import '../styles/Header.css';
-import { Button, Nav, Row, Col, Form, Card } from 'react-bootstrap';
+import { Button, Nav, Row, Col, Form, Card, Navbar, Container } from 'react-bootstrap';
 import { Formik, ErrorMessage } from 'formik';
 import * as Yup from "yup";
 
@@ -12,10 +12,10 @@ const formSchema = Yup.object().shape({
 });
 
 const URL = process.env.REACT_APP_BACKEND_CONNECTION;
-
+const userVacio = { legajo: '', correo: '', rol: '', pass: '' };
 const Header = () => {
     const usuarioAux = localStorage.getItem('usuario');
-    const [usuario, setUsuario] = useState({ legajo: '', correo: '', rol: '', pass: '' });
+    const [usuario, setUsuario] = useState(userVacio);
     const [mostrarLogin, setMostrarLogin] = useState(false);
 
     const [initialValues, setInitialValues] = useState({ correo: '', pass: '' });
@@ -35,7 +35,7 @@ const Header = () => {
 
     function cerrarSesion() {
         localStorage.clear();
-        setUsuario({ legajo: '', correo: '', rol: '', pass: '' });
+        setUsuario(userVacio);
         window.location.assign("/");
     }
 
@@ -85,72 +85,54 @@ const Header = () => {
 
     return (
         <>
-            <Row>
-                <Col>
-                    {!localStorage.getItem('usuario') ?
-                        <Button onClick={() => { setMostrarLogin(true); }}> Iniciar sesión</Button>
-                        :
-                        <>
-                            <Button onClick={cerrarSesion}> Cerrar sesión</Button>
-                            <label>{JSON.parse(localStorage.getItem("usuario")).correo} - {JSON.parse(localStorage.getItem("usuario")).rol}</label>
-                        </>
-                    }
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <Nav style={{ paddingLeft: 10 }} className='header' variant="underline" defaultActiveKey="/home">
-                        <Nav.Item >
-                            <Nav.Link href="/">Inicio</Nav.Link>
-                        </Nav.Item>
-
-                        {(localStorage.getItem("usuario") && JSON.parse(localStorage.getItem("usuario")).legajo !== '' && (JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 1 || JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 2)) &&
-                            <Nav.Item>
-                                <Nav.Link href="/mis-cursos">Mis cursos</Nav.Link>
-                            </Nav.Item>
-                        }
-                        {(localStorage.getItem("usuario") && JSON.parse(localStorage.getItem("usuario")).legajo !== '' && JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 1) &&
-                            <Nav.Item>
-                                <Nav.Link href="/cursos">Inscripciones</Nav.Link>
-                            </Nav.Item>
-                        }
-                        {(localStorage.getItem("usuario") && JSON.parse(localStorage.getItem("usuario")).legajo !== '' && JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 2) &&
-                            <Nav.Item>
-                                <Nav.Link href="/carreras">Vacantes</Nav.Link>
-                            </Nav.Item>
-                        }
-                        {(localStorage.getItem("usuario") && JSON.parse(localStorage.getItem("usuario")).legajo !== '' && (JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 1 || JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 2)) &&
-                            <Nav.Item>
-                                <Nav.Link href="/notas">Mis Notas</Nav.Link>
-                            </Nav.Item>
-                        }
-                        {(localStorage.getItem("usuario") && JSON.parse(localStorage.getItem("usuario")).legajo !== '' && JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 3) &&
-                            <Nav.Item>
-                                <Nav.Link href="/carreras">Novedades</Nav.Link>
-                            </Nav.Item>
-                        }
-                        {(localStorage.getItem("usuario") && JSON.parse(localStorage.getItem("usuario")).legajo !== '' && JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 3) &&
-                            <Nav.Item>
-                                <Nav.Link href="/carreras">Usuarios</Nav.Link>
-                            </Nav.Item>
-                        }
-                        {(localStorage.getItem("usuario") && JSON.parse(localStorage.getItem("usuario")).legajo !== '' && JSON.parse(localStorage.getItem("usuario")).tipoUsuario === 3) &&
-                            <Nav.Item>
-                                <Nav.Link href="/carreras">Cursos</Nav.Link>
-                            </Nav.Item>
-                        }
-                        <Nav.Item>
+            <Navbar collapseOnSelect expand="md" variant='dark' bg="dark" data-bs-theme="dark">
+                <Container fluid>
+                    <Navbar.Brand href="/">Navbar</Navbar.Brand>
+                    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                    <Navbar.Collapse id="responsive-navbar-nav">
+                        <Nav className='me-auto d-flex justify-content-between align-items-center'>
                             <Nav.Link href="/institucional">Institucional</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
                             <Nav.Link href="/carreras">Carreras</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
                             <Nav.Link href="/novedades">Novedades</Nav.Link>
-                        </Nav.Item>
-                    </Nav>
-                </Col>
-            </Row>
+
+                            {(usuario && usuario.tipoUsuario === 1 || usuario.tipoUsuario === 2) &&
+                                <Nav.Link href="/mis-cursos">Mis cursos</Nav.Link>
+                            }
+                            {(usuario && usuario.legajo !== '' && usuario.tipoUsuario === 1) &&
+                                <Nav.Link href="/cursos">Inscripciones</Nav.Link>
+                            }
+                            {(usuario && usuario.legajo !== '' && usuario.tipoUsuario === 2) &&
+                                <Nav.Link href="/carreras">Vacantes</Nav.Link>
+                            }
+                            {(usuario && usuario.legajo !== '' && (usuario.tipoUsuario === 1 || usuario.tipoUsuario === 2)) &&
+                                <Nav.Link href="/notas">Mis Notas</Nav.Link>
+                            }
+                            {(usuario && usuario.legajo !== '' && usuario.tipoUsuario === 3) &&
+                                <Nav.Link href="/carreras">Novedades</Nav.Link>
+                            }
+                            {(usuario && usuario.legajo !== '' && usuario.tipoUsuario === 3) &&
+                                <Nav.Link href="/carreras">Usuarios</Nav.Link>
+                            }
+                            {(usuario && usuario.legajo !== '' && usuario.tipoUsuario === 3) &&
+                                <Nav.Link href="/carreras">Cursos</Nav.Link>
+                            }
+                        </Nav>
+                        <Nav className='d-flex justify-content-between align-items-center '>
+                            {
+                                usuario.correo ?
+                                    <div>
+                                        <Button variant='secondary' onClick={cerrarSesion}> Cerrar sesión</Button>
+                                        <label className='p-1' style={{ color: '#FAFAFA' }} >{usuario.correo} </label>
+                                    </div>
+                                    :
+                                    <Button onClick={() => { setMostrarLogin(true); }}> Iniciar sesión</Button>
+                            }
+                        </Nav>
+
+                    </Navbar.Collapse>
+
+                </Container>
+            </Navbar>
 
             {mostrarLogin &&
                 <Row className="justify-content-center">

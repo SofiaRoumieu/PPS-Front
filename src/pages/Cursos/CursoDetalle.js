@@ -23,7 +23,7 @@ const CursoDetalle = (props) => {
     const [form, setForm] = useState(initialForm)
     const { tipo, titulo, texto, filePath } = form;
 
-    const [curso, setCurso] = useState({ idCurso: '', materia: '', texto: '', carrucel: false });
+    const [curso, setCurso] = useState(JSON.parse(localStorage.getItem('curso')));
     const [solapa, setSolapa] = useState("Materiales");
     const [alumnos, setAlumnos] = useState([]);
     const [materiales, setMateriales] = useState([]);
@@ -76,8 +76,6 @@ const CursoDetalle = (props) => {
             }
         }
         BuscarMateriales();
-
-
 
     }, []);
 
@@ -136,31 +134,31 @@ const CursoDetalle = (props) => {
                     props.tipo == 'verDetalle' ?
                         <>
                             <Row>
-                                <Col xs="12" lg="12">
+                                <Col >
                                     <h1 style={{ color: "white" }}><span style={{ color: "black" }}>{curso.materia}</span></h1>
                                 </Col>
                             </Row>
-                            <div className='row bg-primary'>
-                                <div className='col' >
+                            <Row className='bg-secondary'>
+                                <Col>
                                     <button className='btn btn-secondary' onClick={() => { setSolapa("Materiales"); BuscarMateriales() }} >Materiales</button>
-                                </div>
-                                <div className='col' >
+                                </Col>
+                                <Col >
                                     <button className='btn btn-secondary' onClick={() => { setSolapa("Alumnos"); BuscarAlumnos() }}  >Alumnos</button>
-                                </div>
+                                </Col>
                                 {
                                     JSON.parse(localStorage.getItem('usuario')).tipoUsuario == 1 ?
                                         <>
-                                            <div className='col' >
+                                            <Col >
                                                 <button className='btn btn-secondary' onClick={() => { setSolapa("Alumnos"); BuscarAlumnos() }}  > Cargar Asistencias </button>
-                                            </div>
-                                            <div className='col' >
+                                            </Col>
+                                            <Col >
                                                 <button className='btn btn-secondary' onClick={() => { navigate('/carga-notas') }}  > Cargar Notas </button>
-                                            </div>
-                                            <div className='col' >
+                                            </Col>
+                                            <Col >
                                                 <button className='btn btn-secondary' onClick={() => {
                                                     setShowModal(true);
                                                 }}  > Subir Material </button>
-                                            </div>
+                                            </Col>
                                         </> : <></>
                                 }
 
@@ -216,26 +214,28 @@ const CursoDetalle = (props) => {
                                 </Modal>
 
 
-                            </div>
+                            </Row>
                             {
                                 solapa == 'Materiales' ?
-                                    <Row  >
+                                    <Row >
                                         {materiales.length > 0 ?
-                                            <Row className='row-materiales' >
+                                            < >
                                                 {
                                                     materiales.map(mat => {
-                                                        return <Card key={mat.idMaterial} className='card-material' >
-                                                            <Card.Title>
-                                                                {mat.titulo}
-                                                            </Card.Title>
-                                                            <Card.Body>
-                                                                {mat.texto}
-                                                            </Card.Body>
-                                                        </Card>
+                                                        return <Col md='12' >
+                                                            <Card key={mat.idMaterial} className='card-material' >
+                                                                <Card.Title>
+                                                                    {mat.titulo}
+                                                                </Card.Title>
+                                                                <Card.Body>
+                                                                    {mat.texto}
+                                                                </Card.Body>
+                                                            </Card>
+                                                        </Col>
                                                     })
                                                 }
 
-                                            </Row>
+                                            </>
                                             :
                                             <Row>NO HAY MATERIALES</Row>
                                         }
@@ -247,9 +247,11 @@ const CursoDetalle = (props) => {
                                             alumnos.length > 0 ?
                                                 <>
                                                     {alumnos.map((al) => {
-                                                        return <Row key={al.legajo}>
-                                                            <Col>{al.nombre} {al.apellido}</Col>
-                                                        </Row>
+                                                        return <Col md='6' className='p-3' key={al.legajo}>
+                                                            <h5>
+                                                                {al.nombre} {al.apellido}
+                                                            </h5>
+                                                        </Col>
                                                     })}
                                                 </>
                                                 :

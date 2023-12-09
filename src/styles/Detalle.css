@@ -15,14 +15,6 @@ img {
     height: 340px;
 }
 
-.row {
-    /*background-image: url("../assets/images/fondo.jpg");*/
-    background-color: rgb(154, 204, 154, 0.2);
-    background-size: 100%;
-    margin-top: 30px;
-    padding-bottom: 25px;
-    --bs-gutter-x: 0!important;
-}
 
 h2 {
     color: #fe0404;
