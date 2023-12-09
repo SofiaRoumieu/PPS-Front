@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/Header.css';
-import { Button, Nav, Navbar, Container } from 'react-bootstrap';
+import { Button, Nav, Navbar, Container, NavDropdown } from 'react-bootstrap';
 
 const URL = process.env.REACT_APP_BACKEND_CONNECTION;
 const userVacio = { legajo: '', correo: '', rol: '', pass: '' };
@@ -45,13 +45,10 @@ const Header = () => {
                                 <Nav.Link href="/notas">Mis Notas</Nav.Link>
                             }
                             {(usuario && usuario.legajo !== '' && usuario.tipoUsuario === 3) &&
-                                <Nav.Link href="/carreras">Novedades</Nav.Link>
-                            }
-                            {(usuario && usuario.legajo !== '' && usuario.tipoUsuario === 3) &&
-                                <Nav.Link href="/carreras">Usuarios</Nav.Link>
-                            }
-                            {(usuario && usuario.legajo !== '' && usuario.tipoUsuario === 3) &&
-                                <Nav.Link href="/carreras">Cursos</Nav.Link>
+                                <NavDropdown title="Administracion" id="basic-nav-dropdown">
+                                    <NavDropdown.Item href="/usuarios-listado"> Usuarios </NavDropdown.Item>
+                                    <NavDropdown.Item href="/"> Cursos </NavDropdown.Item>
+                                </NavDropdown>
                             }
                         </Nav>
                         <Nav className='d-flex justify-content-between align-items-center '>

@@ -13,6 +13,8 @@ import NovedadesListado from '../pages/Novedades/NovedadesListado';
 import NovedadesForm from '../pages/Novedades/NovedadesForm';
 import NotasListado from "../pages/Notas/NotasListado";
 import CargaNotas from "../pages/Cursos/CargaNotas";
+import UsuariosListado from "../pages/Usuarios/UsuariosListado";
+import AltaUsuario from "../pages/Usuarios/AltaUsuario";
 
 
 
@@ -36,6 +38,8 @@ const Ruteador = () => {
                 <Route path="/novedades-detalle/:id" element={<NovedadesForm tipo="verDetalle" />} />
                 <Route path="/novedades-editar/:id" element={<NovedadesForm tipo="editar" />} />
                 <Route path="/novedades-editar" element={<NovedadesForm tipo="crear" />} />
+                <Route path="/usuarios-listado" element={<UsuariosListado />} />
+                <Route path="/usuarios-alta" element={<AltaUsuario />} />
 
 
 
