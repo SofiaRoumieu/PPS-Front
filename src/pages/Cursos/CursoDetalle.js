@@ -1,82 +1,88 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import '../../styles/Detalle.css';
-import Spinner from '../../components/Spinner';
-import { Form, Row, Col, Button, Breadcrumb, Card, } from 'react-bootstrap';
-import * as Yup from "yup";
+import { Form, Row, Col, Button, Breadcrumb, Card, Container, } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
-import { Formik, Field, ErrorMessage } from "formik";
+import Modal from 'react-bootstrap/Modal';
 
 
 const URL = process.env.REACT_APP_BACKEND_CONNECTION + 'api/';
+
+const initialForm = {
+    tipo: 0,
+    titulo: '',
+    texto: '',
+    filePath: ''
+};
+
 
 const CursoDetalle = (props) => {
     const navigate = useNavigate();
     const formikRef = useRef();
 
+    const [form, setForm] = useState(initialForm)
+    const { tipo, titulo, texto, filePath } = form;
+
     const [curso, setCurso] = useState({ idCurso: '', materia: '', texto: '', carrucel: false });
     const [solapa, setSolapa] = useState("Materiales");
     const [alumnos, setAlumnos] = useState([]);
     const [materiales, setMateriales] = useState([]);
+    const [showModal, setShowModal] = useState(false);
 
-    //botones del formulario
-    const [botonProcesar, setBotonProcesar] = useState("Crear");
-    const [botonVolver, setBotonVolver] = useState("Cancelar");
-    const [buttonDisabled, setButtonDisabled] = useState(false);
+    const handleChange = (e) => {
+        setForm((form) => ({ ...form, [e.target.name]: e.target.value }));
+        console.log(form);
+    };
+    const handleReset = () => {
+        setForm(initialForm);
+        setShowModal(false)
+    };
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (form.tipo <= 0) {
+            console.log("debe elegir un tipo");
+            return;
+        }
+        form.idCursada = curso.id;
+        console.log("Enviando...", form);
 
-    const formSchema = Yup.object().shape({
-        // BusquedaCuitNombre: Yup.string().when("Accion", {
-        //   is: "crear",
-        //   then: Yup.string().required("Campo requerido"),
-        // }),
-        // Sucursal: Yup.string().when("Accion", {
-        //   is: "crear",
-        //   then: Yup.string().required("Campo requerido"),
-        // }),
-        // TipoDenuncia: Yup.string().required("Campo requerido"),
-        // Materia: Yup.string().required("Campo requerido"),
-        // FechaRecibida: Yup.date()
-        //   .required("Campo requerido")
-        //   .max(new Date(), "No puede ser mayor que la fecha actual"),
-    });
+        fetch(URL + 'Cursos/Material', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(form)
+        })
+            .then((res) => res.ok ? res.json() : Promise.reject(res))
+            .then((data) => {
+                console.log('ssss', data);
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+            .finally(() => {
+            });
 
-
+        handleReset();
+    }
 
     useEffect(() => {
         console.log(props)
         console.log(curso)
+
         if (props.tipo == "editar" || props.tipo == "verDetalle") {
             if (localStorage.getItem('curso')) {
                 setCurso(JSON.parse(localStorage.getItem('curso')));
             }
         }
-
-        switch (props.tipo) {
-            case "crear":
-                setBotonProcesar("Crear");
-                setBotonVolver("Cancelar");
-                break;
-            case "editar":
-                setBotonProcesar("Guardar");
-                setBotonVolver("Cancelar");
-                break;
-            case "verDetalle":
-                setBotonVolver("Volver");
-                break;
-        }
+        BuscarMateriales();
 
 
 
     }, []);
 
-    const Guardar = async (data) => {
-        setButtonDisabled(true);
-        setButtonDisabled(false);
-    }
-
     const BuscarAlumnos = () => {
-        fetch(URL + 'Cursos/Alumnos/' + 1, {
+        fetch(URL + 'Cursos/Alumnos/' + curso.id, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json'
@@ -95,7 +101,7 @@ const CursoDetalle = (props) => {
     }
 
     const BuscarMateriales = () => {
-        fetch(URL + 'Cursos/Material/' + 1, {
+        fetch(URL + 'Cursos/Material/' + curso.id, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json'
@@ -116,131 +122,150 @@ const CursoDetalle = (props) => {
 
     return (
         <>
-            <div className='row'>
-                <ToastContainer
-                    position="top-center"
-                    autoClose={1500}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                />
-                <Formik
-                    innerRef={formikRef}
-                    enableReinitialize={true}
-                    initialValues={curso}
-                    validationSchema={formSchema}
-                    onSubmit={Guardar}
 
-                >{({ handleChange, handleBlur, handleSubmit, handleReset, values, errors, touched }) => (
-                    <>
-                        <Card style={{ padding: 20, marginTop: 0 }}>
+            <Container fluid  >
+                <Row>
+                    <Col xs="12" lg="12" style={{ marginBottom: 5 }}>
+                        <Breadcrumb>
+                            <Breadcrumb.Item onClick={() => navigate('/cursos')}>Listado de cursos</Breadcrumb.Item>
+                            <Breadcrumb.Item active>{(props.tipo == "editar") ? "Editar curso" : (props.tipo == "verDetalle") ? "Detalle de curso" : "Nueva curso"}</Breadcrumb.Item>
+                        </Breadcrumb>
+                    </Col>
+                </Row>
+                {
+                    props.tipo == 'verDetalle' ?
+                        <>
                             <Row>
-                                <Col xs="12" lg="12" style={{ marginBottom: 5 }}>
-                                    <Breadcrumb>
-                                        <Breadcrumb.Item onClick={() => navigate('/cursos')}>Listado de cursos</Breadcrumb.Item>
-                                        <Breadcrumb.Item active>{(props.tipo == "editar") ? "Editar curso" : (props.tipo == "verDetalle") ? "Detalle de curso" : "Nueva curso"}</Breadcrumb.Item>
-                                    </Breadcrumb>
+                                <Col xs="12" lg="12">
+                                    <h1 style={{ color: "white" }}><span style={{ color: "black" }}>{curso.materia}</span></h1>
                                 </Col>
                             </Row>
+                            <div className='row bg-primary'>
+                                <div className='col' >
+                                    <button className='btn btn-secondary' onClick={() => { setSolapa("Materiales"); BuscarMateriales() }} >Materiales</button>
+                                </div>
+                                <div className='col' >
+                                    <button className='btn btn-secondary' onClick={() => { setSolapa("Alumnos"); BuscarAlumnos() }}  >Alumnos</button>
+                                </div>
+                                {
+                                    JSON.parse(localStorage.getItem('usuario')).tipoUsuario == 1 ?
+                                        <>
+                                            <div className='col' >
+                                                <button className='btn btn-secondary' onClick={() => { setSolapa("Alumnos"); BuscarAlumnos() }}  > Cargar Asistencias </button>
+                                            </div>
+                                            <div className='col' >
+                                                <button className='btn btn-secondary' onClick={() => { navigate('/carga-notas') }}  > Cargar Notas </button>
+                                            </div>
+                                            <div className='col' >
+                                                <button className='btn btn-secondary' onClick={() => {
+                                                    setShowModal(true);
+                                                }}  > Subir Material </button>
+                                            </div>
+                                        </> : <></>
+                                }
+
+                                <Modal show={showModal} >
+                                    <Modal.Header >
+                                        <Modal.Title>
+                                            AGREGAR MATERIAL
+                                        </Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body>
+
+                                        <form>
+                                            <label htmlFor='tipo' className='label'> Tipo de material </label>
+                                            <select name="tipo" id='tipo' className='form-control' value={tipo} onChange={handleChange} >
+                                                <option value={1}> Noticia </option>
+                                                <option value={2} > Examen </option>
+                                                <option value={3}> Trabajo Practico </option>
+                                            </select>
+
+                                            <label htmlFor='titulo' className='label'> Titulo </label>
+                                            <input
+                                                id='titulo'
+                                                type="text"
+                                                name="titulo"
+                                                placeholder="Ingrese titulo..."
+                                                className='form-control '
+                                                value={titulo}
+                                                onChange={handleChange}
+                                            />
+
+                                            <label htmlFor='texto' className='label'> Descripcion </label>
+                                            <input
+                                                id='texto'
+                                                type="text"
+                                                name="texto"
+                                                placeholder="Ingrese descripcion..."
+                                                className='form-control '
+                                                value={texto}
+                                                onChange={handleChange}
+                                            />
+
+                                            <label htmlFor='filePath' className='label'> Subir archivo </label>
+                                            <input type='file' className='form-control' id='filePath' name='filePath' onChange={handleChange} ></input>
+
+
+                                        </form>
+
+                                    </Modal.Body>
+                                    <Modal.Footer>
+                                        <Button className='btn-secondary' onClick={handleReset} >Cancelar</Button>
+                                        <Button onClick={handleSubmit}  >Crear</Button>
+                                    </Modal.Footer>
+                                </Modal>
+
+
+                            </div>
                             {
-                                props.tipo == 'verDetalle' ?
-                                    <>
-                                        <Row>
-                                            <Col xs="12" lg="12">
-                                                <h1 style={{ color: "white" }}><span style={{ color: "black" }}>{curso.materia}</span></h1>
-                                            </Col>
-                                        </Row>
-                                        <div className='row bg-primary'>
-                                            <div className='col' >
-                                                <button className='btn btn-secondary' onClick={() => { setSolapa("Materiales"); BuscarMateriales() }} >Materiales</button>
-                                            </div>
-                                            <div className='col' >
-                                                <button className='btn btn-secondary' onClick={() => { setSolapa("Alumnos"); BuscarAlumnos() }}  >Alumnos</button>
-                                            </div>
-                                        </div>
-                                        {
-                                            solapa == 'Materiales' ?
-                                                <Row  >
-                                                    {materiales.length > 0 ?
-                                                        <Row className='row-materiales' >
-                                                            {
-                                                                materiales.map(mat => {
-                                                                    return <Card className='card-material' >
-                                                                        <Card.Title>
-                                                                            {mat.titulo}
-                                                                        </Card.Title>
-                                                                        <Card.Body>
-                                                                            {mat.texto}
-                                                                        </Card.Body>
-                                                                    </Card>
-                                                                })
-                                                            }
+                                solapa == 'Materiales' ?
+                                    <Row  >
+                                        {materiales.length > 0 ?
+                                            <Row className='row-materiales' >
+                                                {
+                                                    materiales.map(mat => {
+                                                        return <Card key={mat.idMaterial} className='card-material' >
+                                                            <Card.Title>
+                                                                {mat.titulo}
+                                                            </Card.Title>
+                                                            <Card.Body>
+                                                                {mat.texto}
+                                                            </Card.Body>
+                                                        </Card>
+                                                    })
+                                                }
 
-                                                        </Row>
-                                                        :
-                                                        <Row>NO HAY MATERIALES</Row>
-                                                    }
-
-                                                </Row>
-                                                :
-                                                <Row>
-                                                    {
-                                                        alumnos.length > 0 ?
-                                                            <>
-                                                                {alumnos.map((al) => {
-                                                                    return <Row>
-                                                                        <Col>{al.nombre} {al.apellido}</Col>
-                                                                    </Row>
-                                                                })}
-                                                            </>
-                                                            :
-                                                            <>No hay alumnos en el curso</>
-                                                    }
-                                                    <Col>
-                                                    </Col>
-                                                </Row>
-
+                                            </Row>
+                                            :
+                                            <Row>NO HAY MATERIALES</Row>
                                         }
 
-                                    </>
+                                    </Row>
                                     :
-                                    <>
-                                    </>
+                                    <Row>
+                                        {
+                                            alumnos.length > 0 ?
+                                                <>
+                                                    {alumnos.map((al) => {
+                                                        return <Row key={al.legajo}>
+                                                            <Col>{al.nombre} {al.apellido}</Col>
+                                                        </Row>
+                                                    })}
+                                                </>
+                                                :
+                                                <>No hay alumnos en el curso</>
+                                        }
+
+                                    </Row>
+
                             }
-                            {/* <Row>
-                                <Col xs="2" lg="2">
-                                    <Button
-                                        onClick={() => navigate('/cursos')}
-                                        type="button"
-                                        style={{ width: "100%", background: "#F2F2F2", borderColor: "#009AAE", color: "#009AAE" }}
-                                    >
-                                        {botonVolver}
-                                    </Button>
-                                </Col>
-                                {props.tipo != 'verDetalle' &&
-                                    <Col xs lg="3">
-                                        <Button
-                                            variant="primary"
-                                            onClick={handleSubmit}
-                                            style={{ width: "100%", background: "#009AAE", borderColor: "#009AAE", color: "#FFFFFF" }}
-                                            disabled={buttonDisabled}
-                                        >
-                                            {buttonDisabled ? (<>
-                                                <Spinner animation="border" size="sm" />
-                                                {' '} Procesando
-                                            </>) : botonProcesar
-                                            }
-                                        </Button>
-                                    </Col>}
-                            </Row> */}
-                        </Card>
-                    </>)}
-                </Formik>
-            </div>
+
+                        </>
+                        :
+                        <>
+                        </>
+                }
+            </Container>
         </>
     );
 }
