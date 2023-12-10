@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Dropdown, Form, Row } from 'react-bootstrap';
 
 
@@ -7,21 +7,25 @@ const initialForm = {
     apellido: '',
     correo: '',
     dni: '',
-    tipoUsuario: 0,
+    tipoUsuario: -1,
     fechaNacimiento: '',
-    sexo: 0,
+    sexo: -1,
+    carrera: -1,
     provincia: '',
-    ciudad: '',
+    localidad: '',
     codigoPostal: 0,
     calle: '',
     altura: 0,
     piso: 0,
-    depto: 0
+    departamento: 0
 }
+const URL = process.env.REACT_APP_BACKEND_CONNECTION + 'api/';
+
 const AltaUsuario = () => {
 
     const [form, setForm] = useState(initialForm)
-    const { nombre, apellido, correo, dni, tipoUsuario, fechaNacimiento, sexo, provincia, ciudad, codigoPostal, calle, altura, piso, depto } = form;
+    const [carreras, setCarreras] = useState([]);
+    const { nombre, apellido, correo, dni, tipoUsuario, fechaNacimiento, carrera, sexo, provincia, localidad, codigoPostal, calle, altura, piso, departamento } = form;
 
 
     const handleChange = (e) => {
@@ -33,6 +37,57 @@ const AltaUsuario = () => {
     };
     const handleSubmit = () => {
         console.log(form);
+        let user = {
+            nombre, apellido, correo, dni, tipoUsuario, fechaNacimiento, idCarrera: carrera, sexo
+        }
+        let domicilio = {
+            provincia, localidad, codigoPostal, calle, altura, piso, departamento
+        }
+        let envio = {
+            user,
+            domicilio
+        }
+
+        console.log(envio);
+        fetch(URL + 'Usuarios', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(envio)
+        })
+            .then((res) => res.ok ? res.json() : Promise.reject(res))
+            .then((data) => {
+                console.log('ssss', data);
+                handleReset();
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+            .finally(() => {
+            });
+
+    }
+
+
+    useEffect(() => {
+        getCarreras()
+    }, []);
+
+    const getCarreras = () => {
+        fetch(URL + 'Publico/Carreras', {
+            method: "GET",
+            headers: {
+                "Content-Type": "Application/json",
+            }
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data)
+                setCarreras(data);
+            })
+            .catch(ex => console.log(ex))
+
     }
 
 
@@ -94,7 +149,7 @@ const AltaUsuario = () => {
                     <Col xs='12' sm='6' lg='3' >
                         <label htmlFor='tipoUsuario' className='label'> Tipo de Usuario </label>
                         <select name="tipoUsuario" id='tipoUsuario' className='form-control' value={tipoUsuario} onChange={handleChange} >
-                            <option value={0}> Seleccione </option>
+                            <option value={-1}> Seleccione </option>
                             <option value={1}> Alumno </option>
                             <option value={2}> Profesor </option>
                             <option value={3}> Administrador </option>
@@ -115,12 +170,31 @@ const AltaUsuario = () => {
                     <Col xs='12' sm='6' lg='3' >
                         <label htmlFor='sexo' className='label'> Sexo </label>
                         <select name="sexo" id='sexo' className='form-control' value={sexo} onChange={handleChange} >
-                            <option value={0}> Seleccione </option>
+                            <option value={-1}> Seleccione </option>
                             <option value={1}> Masculino </option>
                             <option value={2}> Femenino </option>
                             <option value={3}> Otros </option>
                         </select>
                     </Col>
+                    <Col xs='12' sm='6' lg='3' >
+                        <label htmlFor='carrera' className='label'> Carrera </label>
+                        <select name='carrera' value={carrera} className='form-control' onChange={handleChange}>
+                            <option className='form-control' value={-1}> Seleccione </option>
+                            {
+                                carreras.length ? (
+                                    carreras.map((facultad) => {
+                                        return (
+                                            facultad.carreras.map((carrera) => {
+                                                return <option className='form-control' key={carrera.id} value={carrera.id}  >{carrera.nombre}</option>
+                                            })
+                                        )
+                                    })
+                                ) : (<></>)
+                            }
+                        </select>
+
+                    </Col>
+
                 </Row>
 
                 <Row className='mt-4'>
@@ -141,14 +215,14 @@ const AltaUsuario = () => {
                         />
                     </Col>
                     <Col xs='12' sm='6' lg='4' >
-                        <label htmlFor='ciudad' className='label'> Ciudad </label>
+                        <label htmlFor='localidad' className='label'> Localidad </label>
                         <input
-                            id='ciudad'
+                            id='localidad'
                             type="text"
-                            name="ciudad"
-                            placeholder="Ingrese ciudad..."
+                            name="localidad"
+                            placeholder="Ingrese localidad..."
                             className='form-control '
-                            value={ciudad}
+                            value={localidad}
                             onChange={handleChange}
                         />
                     </Col>
@@ -204,14 +278,14 @@ const AltaUsuario = () => {
                         />
                     </Col>
                     <Col xs='12' sm='6' lg='3' >
-                        <label htmlFor='depto' className='label'> Depto </label>
+                        <label htmlFor='departamento' className='label'> Departamento </label>
                         <input
-                            id='depto'
+                            id='departamento'
                             type="text"
-                            name="depto"
-                            placeholder="Ingrese depto..."
+                            name="departamento"
+                            placeholder="Ingrese departamento..."
                             className='form-control '
-                            value={depto}
+                            value={departamento}
                             onChange={handleChange}
                         />
                     </Col>
