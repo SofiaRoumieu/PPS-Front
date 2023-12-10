@@ -146,7 +146,7 @@ const CursoDetalle = (props) => {
                                     <button className='btn btn-secondary' onClick={() => { setSolapa("Alumnos"); BuscarAlumnos() }}  >Alumnos</button>
                                 </Col>
                                 {
-                                    JSON.parse(localStorage.getItem('usuario')).tipoUsuario == 1 ?
+                                    JSON.parse(localStorage.getItem('usuario')).tipoUsuario == 2 ?
                                         <>
                                             <Col >
                                                 <button className='btn btn-secondary' onClick={() => { setSolapa("Alumnos"); BuscarAlumnos() }}  > Cargar Asistencias </button>

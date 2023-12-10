@@ -26,6 +26,16 @@ const UsuariosListado = () => {
         retorno += `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`
         return retorno;
     }
+    const mapTipoUsuario = (tipou) => {
+        let retorno = 'Administrador';
+        if (tipou == 1) {
+            retorno = 'Alumno'
+        } else if (tipou == 2) {
+            retorno = 'Profesor'
+        }
+        return retorno;
+    }
+
 
     useEffect(() => {
 
@@ -68,6 +78,7 @@ const UsuariosListado = () => {
                         <th>Nombre</th>
                         <th>Apellido</th>
                         <th>Dni</th>
+                        <th>Tipo Usuario</th>
                         <th>Fecha ingreso</th>
                         <th>Estado</th>
                         <th>Acciones</th>
@@ -81,6 +92,7 @@ const UsuariosListado = () => {
                                 <td>{usuario.nombre}</td>
                                 <td>{usuario.apellido}</td>
                                 <td>{usuario.dni}</td>
+                                <td>{mapTipoUsuario(usuario.tipoUsuario)}</td>
                                 <td>{mapDate(usuario.fechaRegistro)}</td>
                                 <td>{usuario.estado == 1 ? 'Activo' : 'Inactivo'}</td>
                                 <td >Acciones</td>

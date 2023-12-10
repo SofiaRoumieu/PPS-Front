@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Carousel, Button, Card } from 'react-bootstrap';
-import Spinner from '../../components/Spinner';
-import campus from '../../assets/images/campus.png';
+import { Row, Col, Carousel, Button, Card, Dropdown, Modal } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 //import {Edit as EditIcon, Tune as TuneIcon, Check as CheckIcon, Storage as StorageIcon, MoreVert as MoreVertIcon, Search as SearchIcon, Remove as RemoveIcon, Download as DownloadIcon, UploadFile as UploadFileIcon, FileUpload as FileUploadIcon, Campaign as CampaignIcon, Place as PlaceIcon } from '@mui/icons-material';
-import Cursos from "../../storage/Cursos";
 import DataTable from 'react-data-table-component';
 import dataTableStyles from '../../styles/dataTableStyles';
 
@@ -17,19 +14,83 @@ const CursosListado = (props) => {
 
     const [cursos, setCursos] = useState([]);
 
-    const [cargando, setCargando] = useState(false);
+    const [postulaciones, setPostulaciones] = useState([]);
+    const [profesorSeleccionado, setprofesorSeleccionado] = useState(0);
+    const [cursoSeleccionado, setcursoSeleccionado] = useState(0);
+
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         console.log("CURSOS");
 
         if (props.tipo === "todos") {
             getCursadasParaInscribir();
-        } else {
+        } else if (props.tipo === "misCursos") {
             getCursadasAlumno();
+        } else {
+            getTodasLasCursadas();
         }
 
     }, []);
 
+    const asignarProfesor = () => {
+        console.log(profesorSeleccionado);
+        console.log(cursoSeleccionado);
+        let data = {
+            "idCursada": cursoSeleccionado,
+            "legajoProfesor": profesorSeleccionado,
+        }
+        fetch(URL + 'Cursos/AsignarProfesor', {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log('ASIGNADO', data);
+            })
+            .catch(ex => console.log(ex))
+
+
+    }
+
+    const handleChange = (e) => {
+        console.log(e.target.value)
+        setprofesorSeleccionado(e.target.value)
+    }
+
+    const getPostulaciones = (id) => {
+        fetch(URL + 'Cursos/postulaciones/' + id, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log('Postulaciones', data);
+                setPostulaciones(data);
+            })
+            .catch(ex => console.log(ex))
+
+    }
+
+    const getTodasLasCursadas = () => {
+        fetch(URL + 'Cursos', {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log('CursosParaInscribir', data);
+                setCursos(data);
+            })
+            .catch(ex => console.log(ex))
+    }
     const getCursadasParaInscribir = () => {
         fetch(URL + 'Cursos/ParaInscribir', {
             method: "GET",
@@ -43,7 +104,6 @@ const CursosListado = (props) => {
                 setCursos(data);
             })
             .catch(ex => console.log(ex))
-
     }
     const getCursadasAlumno = () => {
         fetch(URL + 'Cursos/' + usuario.legajo, {
@@ -61,6 +121,13 @@ const CursosListado = (props) => {
 
     }
 
+    const handleAsignar = (e) => {
+        setcursoSeleccionado(e.target.id)
+        let id = e.target.id;
+        getPostulaciones(id);
+        setShowModal(true);
+    }
+
     const handleInscribir = (e) => {
         console.log('USUARIO', usuario)
         console.log("INSCRIBIR", e.target.id);
@@ -74,7 +141,6 @@ const CursosListado = (props) => {
             .then((res) => res.json())
             .then((data) => {
                 console.log('Inscrito', data);
-                // setCursos(data);
             })
             .catch(ex => console.log(ex))
     }
@@ -129,12 +195,65 @@ const CursosListado = (props) => {
                     Inscribirme
                 </div>
             ),
-            // allowOverflow: true,
-            // button: true,
-            // minWidth: "80px",
-            // maxWidth: "80px",
-        },
+        }
     ];
+
+    const columnsAdmin = [
+        {
+            name: 'Id',
+            selector: row => row?.id,
+            sortable: true,
+            center: true
+        },
+        {
+            name: 'Materia',
+            selector: row => row?.materia,
+            sortable: true,
+            center: true
+        },
+        {
+            name: 'Profesor',
+            selector: row => row?.profesor,
+            sortable: true,
+            center: true
+        },
+        {
+            name: 'Dia',
+            selector: row => row?.dia,
+            sortable: true,
+            center: true
+        },
+        {
+            name: 'Turno',
+            selector: row => row?.turno,
+            sortable: true,
+            center: true
+        },
+        {
+            name: 'Estado',
+            selector: row => row?.estado,
+            sortable: true,
+            center: true
+        },
+        {
+            name: "Acciones",
+            cell: (row) => (
+                <Dropdown>
+                    <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                        Acciones
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                        {row.estado == 'SinAsignar' && <Dropdown.Item onClick={handleAsignar} id={row.id}  > Asignar </Dropdown.Item>}
+                        <Dropdown.Item href="#/action-2"> Editar </Dropdown.Item>
+                        <Dropdown.Item onClick={() => { localStorage.setItem('curso', JSON.stringify(row)); navigate('/curso-detalle') }} > Ir al curso </Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+
+            ),
+        }
+    ];
+
 
     return (
         <div>
@@ -150,12 +269,40 @@ const CursosListado = (props) => {
                 pauseOnHover
             />
             <Row style={{ paddingTop: 10, paddingLeft: 20 }}>
-                <h1 className='titulos'>{(props.tipo === "todos") ? "Listado de cursos" : "Listado de Mis cursos"}</h1>
+                <h1 className='titulos'>{(props.tipo === "misCursos") ? "Listado de Mis cursos" : "Listado de cursos"}</h1>
             </Row>
-            {props.tipo === "todos" && cursos.length > 0 ?
+
+            <Modal show={showModal} >
+                <Modal.Header >
+                    <Modal.Title>
+                        Asignar Profesor
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <label htmlFor='profesor' className='label'> Profesores Postulados: </label>
+                    <select name='profesor' className='form-control' onChange={handleChange} >
+                        <option className='form-control' value={-1}> Seleccione </option>
+                        {
+                            postulaciones.length ? (
+                                postulaciones.map((postulacion) => {
+                                    return (
+                                        <option className='form-control' key={postulacion.legajoProfesor} value={postulacion.legajoProfesor} > {postulacion.profesor}</option>
+                                    )
+                                })
+                            ) : (<></>)
+                        }
+                    </select>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button className='btn-secondary' onClick={() => { setShowModal(false) }} > Cancelar </Button>
+                    <Button onClick={asignarProfesor}  > Asignar </Button>
+                </Modal.Footer>
+            </Modal>
+
+            {props.tipo === "admin" && cursos.length > 0 ?
                 <Row>
                     <DataTable
-                        columns={columns}
+                        columns={columnsAdmin}
                         data={cursos}
                         customStyles={dataTableStyles}
                         pagination
@@ -165,10 +312,18 @@ const CursosListado = (props) => {
                     />
                 </Row>
 
-                : props.tipo === 'admin' ?
-                    <>
-                        AgregarCurso
-                    </>
+                : props.tipo === 'todos' ?
+                    <Row>
+                        <DataTable
+                            columns={columns}
+                            data={cursos}
+                            customStyles={dataTableStyles}
+                            pagination
+                            paginationRowsPerPageOptions={[10, 20, 30, 50]}
+                            paginationComponentOptions={dataTableStyles.paginationComponentOptions}
+                            noDataComponent="No hay cursos para mostrar"
+                        />
+                    </Row>
                     :
                     <Row>
                         {
