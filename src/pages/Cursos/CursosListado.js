@@ -23,24 +23,28 @@ const CursosListado = (props) => {
         console.log("CURSOS");
 
         if (props.tipo === "todos") {
-            fetch(URL + 'Cursos/ParaInscribir', {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    console.log('CursosParaInscribir', data);
-                    setCursos(data);
-                })
-                .catch(ex => console.log(ex))
+            getCursadasParaInscribir();
         } else {
             getCursadasAlumno();
         }
 
     }, []);
 
+    const getCursadasParaInscribir = () => {
+        fetch(URL + 'Cursos/ParaInscribir', {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log('CursosParaInscribir', data);
+                setCursos(data);
+            })
+            .catch(ex => console.log(ex))
+
+    }
     const getCursadasAlumno = () => {
         fetch(URL + 'Cursos/' + usuario.legajo, {
             method: "GET",
@@ -160,40 +164,45 @@ const CursosListado = (props) => {
                         noDataComponent="No hay cursos para mostrar"
                     />
                 </Row>
-                :
-                <Row>
-                    {
-                        cursos.map((curso) => {
-                            return <Col xs={12} md={4} key={curso.id}>
-                                <Card>
-                                    <Card.Header>
-                                        <Card.Title>
-                                            {curso.materia}
-                                        </Card.Title>
-                                    </Card.Header>
-                                    <Card.Body>
-                                        <Card.Text>
-                                            {curso.dia} - {curso.turno} - {curso.profesor}
-                                        </Card.Text>
-                                        <Card.Footer >
-                                            <Button onClick={() => { localStorage.setItem('curso', JSON.stringify(curso)); navigate('/curso-detalle') }}>
-                                                Ver curso
-                                            </Button>
-                                            {
-                                                usuario.tipoUsuario == 1 ?
-                                                    <Button value={curso.id} onClick={handleDarDeBaja}>
-                                                        Darme de baja
-                                                    </Button>
-                                                    : <></>
-                                            }
 
-                                        </Card.Footer>
-                                    </Card.Body>
-                                </Card>
-                            </Col>;
-                        })
-                    }
-                </Row>
+                : props.tipo === 'admin' ?
+                    <>
+                        AgregarCurso
+                    </>
+                    :
+                    <Row>
+                        {
+                            cursos.map((curso) => {
+                                return <Col xs={12} md={4} key={curso.id}>
+                                    <Card>
+                                        <Card.Header>
+                                            <Card.Title>
+                                                {curso.materia}
+                                            </Card.Title>
+                                        </Card.Header>
+                                        <Card.Body>
+                                            <Card.Text>
+                                                {curso.dia} - {curso.turno} - {curso.profesor}
+                                            </Card.Text>
+                                            <Card.Footer >
+                                                <Button onClick={() => { localStorage.setItem('curso', JSON.stringify(curso)); navigate('/curso-detalle') }}>
+                                                    Ver curso
+                                                </Button>
+                                                {
+                                                    usuario.tipoUsuario == 1 ?
+                                                        <Button value={curso.id} onClick={handleDarDeBaja}>
+                                                            Darme de baja
+                                                        </Button>
+                                                        : <></>
+                                                }
+
+                                            </Card.Footer>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>;
+                            })
+                        }
+                    </Row>
             }
         </div>
     );

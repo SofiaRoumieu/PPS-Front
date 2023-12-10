@@ -15,6 +15,7 @@ import NotasListado from "../pages/Notas/NotasListado";
 import CargaNotas from "../pages/Cursos/CargaNotas";
 import UsuariosListado from "../pages/Usuarios/UsuariosListado";
 import AltaUsuario from "../pages/Usuarios/AltaUsuario";
+import CrearCurso from "../pages/Cursos/CrearCurso";
 
 
 
@@ -28,6 +29,8 @@ const Ruteador = () => {
                 <Route path="/carrera-detalle" element={<CarrerasMateria />} />
                 <Route path="/mis-cursos" element={<CursosListado tipo="misCursos" />} />
                 <Route path="/cursos" element={<CursosListado tipo="todos" />} />
+                <Route path="/cursos-crear" element={<CrearCurso />} />
+                <Route path="/administrar-cursos" element={<CursosListado tipo="admin" />} />
                 <Route path="/curso-detalle" element={<CursoDetalle tipo="verDetalle" />} />
                 <Route path="/carga-notas" element={<CargaNotas />} />
                 <Route path="/curso-detalle/:id" element={<CursoDetalle tipo="editar" />} />
