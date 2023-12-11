@@ -28,7 +28,9 @@ const Ruteador = () => {
                 <Route path="/carreras" element={<CarrerasListado />} />
                 <Route path="/carrera-detalle" element={<CarrerasMateria />} />
                 <Route path="/mis-cursos" element={<CursosListado tipo="misCursos" />} />
+                <Route path="/mis-cursos-profesor" element={<CursosListado tipo="misCursosProfesor" />} />
                 <Route path="/cursos" element={<CursosListado tipo="todos" />} />
+                <Route path="/cursos-vacantes" element={<CursosListado tipo="vacantes" />} />
                 <Route path="/cursos-crear" element={<CrearCurso />} />
                 <Route path="/administrar-cursos" element={<CursosListado tipo="admin" />} />
                 <Route path="/curso-detalle" element={<CursoDetalle tipo="verDetalle" />} />

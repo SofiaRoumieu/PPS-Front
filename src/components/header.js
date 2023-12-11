@@ -32,16 +32,20 @@ const Header = () => {
                             <Nav.Link href="/carreras">Carreras</Nav.Link>
                             <Nav.Link href="/novedades">Novedades</Nav.Link>
 
-                            {(usuario && usuario.tipoUsuario === 1 || usuario.tipoUsuario === 2) &&
+                            {(usuario && usuario.tipoUsuario === 1) &&
                                 <Nav.Link href="/mis-cursos">Mis cursos</Nav.Link>
                             }
+                            {(usuario && usuario.tipoUsuario === 2) &&
+                                <Nav.Link href="/mis-cursos-profesor">Mis cursos</Nav.Link>
+                            }
+
                             {(usuario && usuario.legajo !== '' && usuario.tipoUsuario === 1) &&
                                 <Nav.Link href="/cursos">Inscripciones</Nav.Link>
                             }
                             {(usuario && usuario.legajo !== '' && usuario.tipoUsuario === 2) &&
-                                <Nav.Link href="/carreras">Vacantes</Nav.Link>
+                                <Nav.Link href="/cursos-vacantes">Vacantes</Nav.Link>
                             }
-                            {(usuario && usuario.legajo !== '' && (usuario.tipoUsuario === 1 || usuario.tipoUsuario === 2)) &&
+                            {(usuario && usuario.legajo !== '' && (usuario.tipoUsuario === 1)) &&
                                 <Nav.Link href="/notas">Mis Notas</Nav.Link>
                             }
                             {(usuario && usuario.legajo !== '' && usuario.tipoUsuario === 3) &&

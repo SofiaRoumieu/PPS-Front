@@ -17,7 +17,7 @@ const initialForm = {
     calle: '',
     altura: 0,
     piso: 0,
-    departamento: 0
+    departamento: "-"
 }
 const URL = process.env.REACT_APP_BACKEND_CONNECTION + 'api/';
 
@@ -43,18 +43,18 @@ const AltaUsuario = () => {
         let domicilio = {
             provincia, localidad, codigoPostal, calle, altura, piso, departamento
         }
-        let envio = {
+        let usuario = {
             user,
             domicilio
         }
 
-        console.log(envio);
+        console.log(usuario);
         fetch(URL + 'Usuarios', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(envio)
+            body: JSON.stringify(usuario)
         })
             .then((res) => res.ok ? res.json() : Promise.reject(res))
             .then((data) => {

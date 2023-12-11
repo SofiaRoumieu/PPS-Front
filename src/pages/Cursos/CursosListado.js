@@ -27,6 +27,11 @@ const CursosListado = (props) => {
             getCursadasParaInscribir();
         } else if (props.tipo === "misCursos") {
             getCursadasAlumno();
+        } else if (props.tipo === 'misCursosProfesor') {
+            getCursadasProfesor();
+        }
+        else if (props.tipo === 'vacantes') {
+            getCursadasVacantes();
         } else {
             getTodasLasCursadas();
         }
@@ -36,6 +41,9 @@ const CursosListado = (props) => {
     const asignarProfesor = () => {
         console.log(profesorSeleccionado);
         console.log(cursoSeleccionado);
+        if (profesorSeleccionado <= 0) {
+            return 'Debe seleccionar un profesor';
+        }
         let data = {
             "idCursada": cursoSeleccionado,
             "legajoProfesor": profesorSeleccionado,
@@ -50,6 +58,8 @@ const CursosListado = (props) => {
             .then((res) => res.json())
             .then((data) => {
                 console.log('ASIGNADO', data);
+                setShowModal(false);
+                getTodasLasCursadas();
             })
             .catch(ex => console.log(ex))
 
@@ -60,6 +70,28 @@ const CursosListado = (props) => {
         console.log(e.target.value)
         setprofesorSeleccionado(e.target.value)
     }
+    const handlePostularme = (e) => {
+        console.log(e.target.id)
+        console.log(usuario.legajo)
+
+        let data = {
+            idCursada: e.target.id,
+            legajoProfesor: usuario.legajo
+        }
+        fetch(URL + 'Cursos/Postulacion', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log('Inscrito', data);
+            })
+            .catch(ex => console.log(ex))
+    }
+
 
     const getPostulaciones = (id) => {
         fetch(URL + 'Cursos/postulaciones/' + id, {
@@ -74,9 +106,21 @@ const CursosListado = (props) => {
                 setPostulaciones(data);
             })
             .catch(ex => console.log(ex))
-
     }
-
+    const getCursadasVacantes = () => {
+        fetch(URL + 'Cursos/vacantes', {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log('Cursos vacantes', data);
+                setCursos(data);
+            })
+            .catch(ex => console.log(ex))
+    }
     const getTodasLasCursadas = () => {
         fetch(URL + 'Cursos', {
             method: "GET",
@@ -86,7 +130,7 @@ const CursosListado = (props) => {
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log('CursosParaInscribir', data);
+                console.log('Todos los Cursos', data);
                 setCursos(data);
             })
             .catch(ex => console.log(ex))
@@ -114,7 +158,21 @@ const CursosListado = (props) => {
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log('MisCursos', data);
+                console.log('MisCursosAlumno', data);
+                setCursos(data);
+            })
+            .catch(ex => console.log(ex))
+    }
+    const getCursadasProfesor = () => {
+        fetch(URL + 'Cursos/profesor/' + usuario.legajo, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log('MisCursosProfesor', data);
                 setCursos(data);
             })
             .catch(ex => console.log(ex))
@@ -162,6 +220,49 @@ const CursosListado = (props) => {
             .catch(ex => console.log(ex.message))
     }
 
+    const handleEstablecerActiva = (e) => {
+        let data = {
+            idCursada: e.target.id,
+            estado: 2
+        };
+        console.log(data)
+        fetch(URL + 'Cursos/ModificarEstado/', {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log("Se activo la cursada");
+                getTodasLasCursadas();
+            })
+            .catch(ex => console.log(ex.message))
+    }
+
+    const handleEstablecerFinalizada = (e) => {
+        let data = {
+            idCursada: e.target.id,
+            estado: 3
+        };
+        console.log(data)
+        fetch(URL + 'Cursos/ModificarEstado/', {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log("Se finalizo la cursada");
+                getTodasLasCursadas();
+            })
+            .catch(ex => console.log(ex.message))
+    }
+
+
     const columns = [
         {
             name: 'Materia',
@@ -169,7 +270,6 @@ const CursosListado = (props) => {
             sortable: true,
             center: true
         },
-
         {
             name: 'Profesor',
             selector: row => row?.profesor,
@@ -197,6 +297,36 @@ const CursosListado = (props) => {
             ),
         }
     ];
+
+    const columnsVacantes = [
+        {
+            name: 'Materia',
+            selector: row => row?.materia,
+            sortable: 0,
+            center: 1
+        },
+        {
+            name: 'Dia',
+            selector: row => row?.dia,
+            sortable: true,
+            center: true
+        },
+        {
+            name: 'Turno',
+            selector: row => row?.turno,
+            sortable: true,
+            center: true
+        },
+        {
+            name: "Acciones",
+            cell: (row) => (
+                <div key={row.id} id={row.id} onClick={handlePostularme} >
+                    Postularme
+                </div>
+            ),
+        }
+    ];
+
 
     const columnsAdmin = [
         {
@@ -245,7 +375,8 @@ const CursosListado = (props) => {
 
                     <Dropdown.Menu>
                         {row.estado == 'SinAsignar' && <Dropdown.Item onClick={handleAsignar} id={row.id}  > Asignar </Dropdown.Item>}
-                        <Dropdown.Item href="#/action-2"> Editar </Dropdown.Item>
+                        {row.estado == 'Asignada' && <Dropdown.Item onClick={handleEstablecerActiva} id={row.id}  > Establecer Activa </Dropdown.Item>}
+                        {row.estado == 'Activa' && <Dropdown.Item onClick={handleEstablecerFinalizada} id={row.id}  > Establecer Finalizada </Dropdown.Item>}
                         <Dropdown.Item onClick={() => { localStorage.setItem('curso', JSON.stringify(row)); navigate('/curso-detalle') }} > Ir al curso </Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
@@ -271,6 +402,13 @@ const CursosListado = (props) => {
             <Row style={{ paddingTop: 10, paddingLeft: 20 }}>
                 <h1 className='titulos'>{(props.tipo === "misCursos") ? "Listado de Mis cursos" : "Listado de cursos"}</h1>
             </Row>
+            {
+                usuario.tipoUsuario == 3 &&
+                <Row style={{ paddingTop: 10, paddingLeft: 20 }}>
+                    <Button onClick={() => navigate('/cursos-crear')}  >Crear Curso</Button>
+                </Row>
+            }
+
 
             <Modal show={showModal} >
                 <Modal.Header >
@@ -325,41 +463,59 @@ const CursosListado = (props) => {
                         />
                     </Row>
                     :
-                    <Row>
-                        {
-                            cursos.map((curso) => {
-                                return <Col xs={12} md={4} key={curso.id}>
-                                    <Card>
-                                        <Card.Header>
-                                            <Card.Title>
-                                                {curso.materia}
-                                            </Card.Title>
-                                        </Card.Header>
-                                        <Card.Body>
-                                            <Card.Text>
-                                                {curso.dia} - {curso.turno} - {curso.profesor}
-                                            </Card.Text>
-                                            <Card.Footer >
-                                                <Button onClick={() => { localStorage.setItem('curso', JSON.stringify(curso)); navigate('/curso-detalle') }}>
-                                                    Ver curso
-                                                </Button>
-                                                {
-                                                    usuario.tipoUsuario == 1 ?
-                                                        <Button value={curso.id} onClick={handleDarDeBaja}>
-                                                            Darme de baja
-                                                        </Button>
-                                                        : <></>
+                    props.tipo === 'vacantes' ?
+                        <Row>
+                            <DataTable
+                                columns={columnsVacantes}
+                                data={cursos}
+                                customStyles={dataTableStyles}
+                                pagination
+                                paginationRowsPerPageOptions={[10, 20, 30, 50]}
+                                paginationComponentOptions={dataTableStyles.paginationComponentOptions}
+                                noDataComponent="No hay cursos para mostrar"
+                            />
+                        </Row>
+                        :
+                        <Row >
+                            {
+                                cursos.map((curso) => {
+                                    return <Col xs={12} md={4} key={curso.id}>
+                                        <Card>
+                                            <Card.Header>
+                                                <Card.Title>
+                                                    {curso.materia}
+                                                </Card.Title>
+                                                {curso.estado == 'Finalizada' &&
+                                                    <Card.Subtitle style={{ color: '#FF0000' }} >
+                                                        Finalizada
+                                                    </Card.Subtitle>
                                                 }
+                                            </Card.Header>
+                                            <Card.Body>
+                                                <Card.Text>
+                                                    {curso.dia} - {curso.turno} - {curso.profesor}
+                                                </Card.Text>
+                                                <Card.Footer >
+                                                    <Button onClick={() => { localStorage.setItem('curso', JSON.stringify(curso)); navigate('/curso-detalle') }}>
+                                                        Ver curso
+                                                    </Button>
+                                                    {
+                                                        usuario.tipoUsuario == 1 && curso.estado != 'Finalizada' ?
+                                                            <Button value={curso.id} onClick={handleDarDeBaja}>
+                                                                Darme de baja
+                                                            </Button>
+                                                            : <></>
+                                                    }
 
-                                            </Card.Footer>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>;
-                            })
-                        }
-                    </Row>
+                                                </Card.Footer>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>;
+                                })
+                            }
+                        </Row>
             }
-        </div>
+        </div >
     );
 }
 

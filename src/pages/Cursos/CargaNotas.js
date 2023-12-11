@@ -9,17 +9,14 @@ const CargaNotas = () => {
     const navigate = useNavigate();
 
     const [alumnos, setAlumnos] = useState([]);
-    const [curso, setCurso] = useState({});
+    const [curso, setCurso] = useState(JSON.parse(localStorage.getItem('curso')));
 
     useEffect(() => {
         console.log(JSON.parse(localStorage.getItem('usuario')))
         console.log(JSON.parse(localStorage.getItem('curso')))
-        if (localStorage.getItem('curso')) {
-            setCurso(JSON.parse(localStorage.getItem('curso')));
-        }
 
 
-        fetch(URL + 'Cursos/Alumnos/' + 1010, {
+        fetch(URL + 'Cursos/Alumnos/' + curso.id, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json'
@@ -40,7 +37,7 @@ const CargaNotas = () => {
     }, []);
 
     const getNotasAlumnos = () => {
-        fetch(URL + 'Cursos/Notas/' + 1010, {
+        fetch(URL + 'Cursos/Notas/' + curso.id, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json'

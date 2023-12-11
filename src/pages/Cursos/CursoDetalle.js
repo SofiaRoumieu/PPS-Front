@@ -122,18 +122,10 @@ const CursoDetalle = (props) => {
         <>
 
             <Container fluid  >
-                <Row>
-                    <Col xs="12" lg="12" style={{ marginBottom: 5 }}>
-                        <Breadcrumb>
-                            <Breadcrumb.Item onClick={() => navigate('/cursos')}>Listado de cursos</Breadcrumb.Item>
-                            <Breadcrumb.Item active>{(props.tipo == "editar") ? "Editar curso" : (props.tipo == "verDetalle") ? "Detalle de curso" : "Nueva curso"}</Breadcrumb.Item>
-                        </Breadcrumb>
-                    </Col>
-                </Row>
                 {
                     props.tipo == 'verDetalle' ?
                         <>
-                            <Row>
+                            <Row className='m-2'>
                                 <Col >
                                     <h1 style={{ color: "white" }}><span style={{ color: "black" }}>{curso.materia}</span></h1>
                                 </Col>
