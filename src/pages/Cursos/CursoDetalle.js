@@ -141,7 +141,7 @@ const CursoDetalle = (props) => {
                                     JSON.parse(localStorage.getItem('usuario')).tipoUsuario == 2 ?
                                         <>
                                             <Col >
-                                                <button className='btn btn-secondary' onClick={() => { setSolapa("Alumnos"); BuscarAlumnos() }}  > Cargar Asistencias </button>
+                                                <button className='btn btn-secondary' onClick={() => { navigate('/carga-asistencias') }}  > Cargar Asistencias </button>
                                             </Col>
                                             <Col >
                                                 <button className='btn btn-secondary' onClick={() => { navigate('/carga-notas') }}  > Cargar Notas </button>

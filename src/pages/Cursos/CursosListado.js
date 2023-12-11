@@ -45,7 +45,10 @@ const CursosListado = (props) => {
         console.log(profesorSeleccionado);
         console.log(cursoSeleccionado);
         if (profesorSeleccionado <= 0) {
-            return 'Debe seleccionar un profesor';
+            setErrorMessage('Debe seleccionar un profesor')
+            setShowModal(false);
+            setShowModalError(true)
+            return;
         }
         let data = {
             "idCursada": cursoSeleccionado,
@@ -65,8 +68,6 @@ const CursosListado = (props) => {
                 getTodasLasCursadas();
             })
             .catch(ex => console.log(ex))
-
-
     }
 
     const handleChange = (e) => {

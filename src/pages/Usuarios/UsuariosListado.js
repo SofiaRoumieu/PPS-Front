@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Row, Table } from 'react-bootstrap';
-import Pagination from 'react-bootstrap/Pagination';
+import { Button, Col, Container, Dropdown, Row, Table } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 const URL = process.env.REACT_APP_BACKEND_CONNECTION;
@@ -8,19 +7,8 @@ const URL = process.env.REACT_APP_BACKEND_CONNECTION;
 const UsuariosListado = () => {
     const navigate = useNavigate();
     const [usuarios, setUsuarios] = useState([]);
-    let active = 1;
-    let items = [];
-    // for (let number = 1; number <= usuarios.length; number++) {
-    //     items.push(
-    //         <Pagination.Item key={number} active={number === active}>
-    //             {number}
-    //         </Pagination.Item>,
-    //     );
-    // }
-
 
     const mapDate = (datt) => {
-        console.log("ASD")
         let retorno = '';
         let date = new Date(datt);
         retorno += `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`
@@ -38,7 +26,10 @@ const UsuariosListado = () => {
 
 
     useEffect(() => {
+        getUsuarios()
+    }, []);
 
+    const getUsuarios = () => {
         fetch(URL + 'api/Usuarios',)
             .then((res) => res.ok ? res.json() : Promise.reject(res))
             .then((data) => {
@@ -50,9 +41,28 @@ const UsuariosListado = () => {
             })
             .finally(() => {
             });
+    }
 
-    }, []);
+    const handleHabilitar = (e) => {
+        console.log(e.target.id);
 
+        let data = {
+            legajo: e.target.id
+        }
+        fetch(URL + 'api/Usuarios', {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+                getUsuarios();
+            })
+            .catch(ex => console.log(ex))
+    }
 
     return (
         <Container>
@@ -95,7 +105,18 @@ const UsuariosListado = () => {
                                 <td>{mapTipoUsuario(usuario.tipoUsuario)}</td>
                                 <td>{mapDate(usuario.fechaRegistro)}</td>
                                 <td>{usuario.estado == 1 ? 'Activo' : 'Inactivo'}</td>
-                                <td >Acciones</td>
+                                <td >
+                                    <Dropdown>
+                                        <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                                            Acciones
+                                        </Dropdown.Toggle>
+
+                                        <Dropdown.Menu>
+                                            {usuario.estado == 1 && <Dropdown.Item onClick={handleHabilitar} id={usuario.legajo}  > Deshabilitar </Dropdown.Item>}
+                                            {usuario.estado == 0 && <Dropdown.Item onClick={handleHabilitar} id={usuario.legajo}  > Habilitar </Dropdown.Item>}
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </td>
                             </tr>
                         )
                     })

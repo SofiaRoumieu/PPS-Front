@@ -16,6 +16,7 @@ import CargaNotas from "../pages/Cursos/CargaNotas";
 import UsuariosListado from "../pages/Usuarios/UsuariosListado";
 import AltaUsuario from "../pages/Usuarios/AltaUsuario";
 import CrearCurso from "../pages/Cursos/CrearCurso";
+import CargarAsistencia from "../pages/Asistencias/CargarAsistencias";
 
 
 
@@ -35,6 +36,7 @@ const Ruteador = () => {
                 <Route path="/administrar-cursos" element={<CursosListado tipo="admin" />} />
                 <Route path="/curso-detalle" element={<CursoDetalle tipo="verDetalle" />} />
                 <Route path="/carga-notas" element={<CargaNotas />} />
+                <Route path="/carga-asistencias" element={<CargarAsistencia />} />
                 <Route path="/curso-detalle/:id" element={<CursoDetalle tipo="editar" />} />
                 <Route path="/curso-detalle" element={<CursoDetalle tipo="crear" />} />
                 <Route path="/institucional" element={<Institucional />} />
