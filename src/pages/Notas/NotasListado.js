@@ -6,10 +6,12 @@ const URL = process.env.REACT_APP_BACKEND_CONNECTION + 'api/';
 const NotasListado = () => {
 
     const [listaNotas, setListaNotas] = useState([]);
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+
 
     useEffect(() => {
         console.log("CURSOS");
-        fetch(URL + 'Usuarios/Notas/' + 1, {
+        fetch(URL + 'Usuarios/Notas/' + usuario.legajo, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json'
