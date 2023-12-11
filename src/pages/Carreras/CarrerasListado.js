@@ -15,7 +15,7 @@ const CarrerasListado = () => {
 
     useEffect(() => {
 
-        fetch(URL + 'Publico/Carreras', {
+        fetch(URL + 'Carreras', {
             method: "GET",
             headers: {
                 "Content-Type": "Application/json",
@@ -65,7 +65,7 @@ const CarrerasListado = () => {
                                             <ul>
                                                 {facultad.carreras.map((carrera) => {
                                                     return <li >
-                                                        <span style={{ cursor: "pointer" }} onClick={() => { localStorage.setItem('carrera', JSON.stringify(carrera)); navigate('/carrera-detalle') }}>
+                                                        <span style={{ cursor: "pointer" }} onClick={() => { localStorage.setItem('carrera', JSON.stringify(carrera)); navigate('/carrera-materias') }}>
                                                             {carrera.nombre}
                                                         </span>
                                                     </li>

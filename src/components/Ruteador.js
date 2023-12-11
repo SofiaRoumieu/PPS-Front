@@ -17,6 +17,7 @@ import UsuariosListado from "../pages/Usuarios/UsuariosListado";
 import AltaUsuario from "../pages/Usuarios/AltaUsuario";
 import CrearCurso from "../pages/Cursos/CrearCurso";
 import CargarAsistencia from "../pages/Asistencias/CargarAsistencias";
+import AltaCarrera from "../pages/Carreras/AltaCarrera";
 
 
 
@@ -27,7 +28,8 @@ const Ruteador = () => {
                 <Route path="/" element={<Inicio />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/carreras" element={<CarrerasListado />} />
-                <Route path="/carrera-detalle" element={<CarrerasMateria />} />
+                <Route path="/carrera-materias" element={<CarrerasMateria />} />
+                <Route path="/carrera-alta" element={<AltaCarrera />} />
                 <Route path="/mis-cursos" element={<CursosListado tipo="misCursos" />} />
                 <Route path="/mis-cursos-profesor" element={<CursosListado tipo="misCursosProfesor" />} />
                 <Route path="/cursos" element={<CursosListado tipo="todos" />} />

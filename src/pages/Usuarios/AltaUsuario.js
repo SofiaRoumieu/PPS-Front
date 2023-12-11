@@ -75,7 +75,7 @@ const AltaUsuario = () => {
     }, []);
 
     const getCarreras = () => {
-        fetch(URL + 'Publico/Carreras', {
+        fetch(URL + 'Carreras', {
             method: "GET",
             headers: {
                 "Content-Type": "Application/json",
