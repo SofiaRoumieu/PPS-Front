@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Form, Button, Container, Row, Col, Card } from 'react-bootstrap';
+import { Form, Button, Container, Row, Col, Card, ToastContainer, Toast } from 'react-bootstrap';
 import { Formik, ErrorMessage } from 'formik';
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -55,13 +55,27 @@ function Login() {
       })
       .catch((err) => {
         console.error('errror', err);
+        setShowToast(true);
       })
       .finally(() => {
       });
   };
 
+  const [showToast, setShowToast] = useState(false);
+
   return (
     <Row className="justify-content-center m-2">
+      <ToastContainer position="top-end" className="p-3" style={{ zIndex: 1 }}>
+        <Toast bg="danger" onClose={() => setShowToast(false)} show={showToast} autohide delay={3000}>
+          <Toast.Header>
+            <strong className="me-auto">Error</strong>
+          </Toast.Header>
+          <Toast.Body>
+            Usuario o contrasena incorrectos.
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
+
       <Col sm='10' md='8' xl='6'>
         <Card style={{ padding: 30, color: "black" }} >
           <Formik

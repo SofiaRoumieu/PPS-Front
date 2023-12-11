@@ -19,6 +19,9 @@ const CursosListado = (props) => {
     const [cursoSeleccionado, setcursoSeleccionado] = useState(0);
 
     const [showModal, setShowModal] = useState(false);
+    const [showModalError, setShowModalError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('ss');
+
 
     useEffect(() => {
         console.log("CURSOS");
@@ -85,11 +88,22 @@ const CursosListado = (props) => {
             },
             body: JSON.stringify(data)
         })
-            .then((res) => res.json())
-            .then((data) => {
-                console.log('Inscrito', data);
+            .then(async res => {
+                if (res.ok)
+                    return res.json()
+                let errmsg = await res.text();
+                console.log(errmsg)
+                throw new Error(errmsg)
             })
-            .catch(ex => console.log(ex))
+            .then((data) => {
+                console.log('Se postulo con exito', data);
+                setErrorMessage("Se postulo con exito")
+                setShowModalError(true)
+            })
+            .catch(ex => {
+                setErrorMessage(ex.message)
+                setShowModalError(true)
+            })
     }
 
 
@@ -196,11 +210,20 @@ const CursosListado = (props) => {
                 'Content-Type': 'application/json'
             }
         })
-            .then((res) => res.json())
+            .then(async res => {
+                if (res.ok)
+                    return res.json()
+                let errmsg = await res.text();
+                console.log(errmsg)
+                throw new Error(errmsg)
+            })
             .then((data) => {
                 console.log('Inscrito', data);
             })
-            .catch(ex => console.log(ex))
+            .catch(ex => {
+                setErrorMessage(ex.message)
+                setShowModalError(true)
+            })
     }
     const handleDarDeBaja = (e) => {
         console.log('USUARIO', usuario)
@@ -212,12 +235,21 @@ const CursosListado = (props) => {
                 'Content-Type': 'application/json'
             }
         })
-            .then((res) => res.json())
-            .then((data) => {
-                console.log('SE DIO DE BAJA', data);
-                getCursadasAlumno();
+            .then(async res => {
+                if (res.ok)
+                    return res.json()
+                let errmsg = await res.text();
+                console.log(errmsg)
+                throw new Error(errmsg)
             })
-            .catch(ex => console.log(ex.message))
+            .then((data) => {
+                console.log('Se dio de baja', data);
+                getCursadasAlumno()
+            })
+            .catch(ex => {
+                setErrorMessage(ex.message)
+                setShowModalError(true)
+            })
     }
 
     const handleEstablecerActiva = (e) => {
@@ -409,6 +441,19 @@ const CursosListado = (props) => {
                 </Row>
             }
 
+            <Modal show={showModalError} >
+                <Modal.Header >
+                    <Modal.Title>
+                        Error
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {errorMessage}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button className='btn-secondary' onClick={() => { setShowModalError(false) }} > Aceptar </Button>
+                </Modal.Footer>
+            </Modal>
 
             <Modal show={showModal} >
                 <Modal.Header >
