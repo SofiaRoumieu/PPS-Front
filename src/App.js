@@ -1,15 +1,16 @@
 import './App.css';
-import { useContext, useEffect, useState } from "react";
 import Ruteador from './components/Ruteador';
 import Header from './components/header';
+import Footer from './components/Footer';
 
 function App() {
 
   return (
-      <div className="App" >
-        <Header />
-        <Ruteador />
-      </div>
+    <div className="App" >
+      <Header />
+      <Ruteador />
+      <Footer />
+    </div>
   );
 }
 
