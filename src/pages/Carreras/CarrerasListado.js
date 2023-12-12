@@ -48,8 +48,10 @@ const CarrerasListado = () => {
                 draggable
                 pauseOnHover
             />
-            <Row style={{ paddingTop: 10, paddingLeft: 20 }}>
-                <h1 className='titulos'>Listado de carreras</h1>
+            <Row className='p-2'>
+                <Col xs lg="8">
+                    <h3 className='text-primary text-start'> Oferta academica </h3>
+                </Col>
             </Row>
             {
                 cargando ?
@@ -61,7 +63,7 @@ const CarrerasListado = () => {
                                 <Col >
                                     <Card>
                                         <Row>
-                                            <h3>{facultad.nombreFacultad}</h3>
+                                            <h3 className='text-primary'>{facultad.nombreFacultad}</h3>
                                             <ul>
                                                 {facultad.carreras.map((carrera) => {
                                                     return <li >

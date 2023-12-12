@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import '../../styles/Detalle.css';
-import { Row, Col, Button, Breadcrumb, Card, Spinner, Form, } from 'react-bootstrap';
+import { Row, Col, Button, Breadcrumb, Card, Spinner, Form, Container, } from 'react-bootstrap';
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
@@ -141,7 +141,7 @@ const NovedadForm = (props) => {
     }
 
     return (
-        <>
+        <Container className='mt-2'>
             {cargando ?
                 (<Spinner />)
                 :
@@ -258,7 +258,7 @@ const NovedadForm = (props) => {
                                                                     </p>
                                                                 }
 
-                                                                <Button onClick={() => { inputFile.current.click(); }} style={{ background: "#FFFFFF", borderColor: "#009AAE", color: "#009AAE", width: "100%" }} >
+                                                                <Button onClick={() => { inputFile.current.click(); }} variant='outline-primary' className='w-100' >
                                                                     Cargar archivo
                                                                 </Button>
                                                                 <div style={{ display: "none" }}>
@@ -280,7 +280,7 @@ const NovedadForm = (props) => {
                                                             </Form.Group>
                                                         </Col>
                                                         <Col xs lg="4" style={{ marginTop: 15 }}>
-                                                            <Form.Label>Mostrar novedad en carrucel:</Form.Label>
+                                                            <Form.Label>Mostrar novedad en carrusel:</Form.Label>
                                                             <Form.Group controlId="Carrucel">
                                                                 <Form.Check
                                                                     name="Carrucel"
@@ -299,7 +299,8 @@ const NovedadForm = (props) => {
                                                 <Button
                                                     onClick={() => navigate('/novedades')}
                                                     type="button"
-                                                    style={{ width: "100%", background: "#FFFFFF", borderColor: "#009AAE", color: "#009AAE" }}
+                                                    variant='outline-primary'
+                                                    className='w-100'
                                                 >
                                                     {botonVolver}
                                                 </Button>
@@ -307,9 +308,9 @@ const NovedadForm = (props) => {
                                             {props.tipo != 'verDetalle' &&
                                                 <Col xs="2" lg="2">
                                                     <Button
+                                                        className='w-100'
                                                         variant="primary"
                                                         onClick={handleSubmit}
-                                                        style={{ width: "100%", background: "#009AAE", borderColor: "#009AAE", color: "#FFFFFF" }}
                                                         disabled={buttonDisabled}
                                                     >
                                                         {buttonDisabled ? (<>
@@ -326,7 +327,7 @@ const NovedadForm = (props) => {
                         </>}
                 </div>
             }
-        </>
+        </Container>
     );
 }
 

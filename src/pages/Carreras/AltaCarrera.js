@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Form, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 
 
 const initialForm = {
@@ -112,77 +112,104 @@ const AltaCarrera = () => {
 
 
     return (
-        <Form>
-            <Row>
-                <Col xs='12' sm='6' lg='4' >
-                    <label htmlFor='nombre' className='label'> Nombre </label>
-                    <input
-                        id='nombre'
-                        type="text"
-                        name="nombre"
-                        placeholder="Contador Publico"
-                        className='form-control '
-                        value={nombre}
-                        onChange={handleChange}
-                    />
-                </Col>
-                <Col xs='12' sm='6' lg='4' >
-                    <label htmlFor='nombreFacultad' className='label'> Facultad </label>
-                    <input
-                        id='nombreFacultad'
-                        type="text"
-                        name="nombreFacultad"
-                        placeholder="Economia"
-                        className='form-control '
-                        value={nombreFacultad}
-                        onChange={handleChange}
-                    />
-                </Col>
-            </Row>
-            <Row>
+        <Container>
+            {/* <Row className='d-flex justify-content-between  m-2'>
+                <Row>
+                    <Col className='text-start'>
+                        <h3 className='text-primary'>Listado de usuarios</h3>
+                    </Col>
+                    <Col className='text-end'>
+                        <Button variant='success' onClick={() => navigate('/usuarios-alta')} >Nuevo usuario</Button>
+                    </Col>
+                </Row>
+            </Row> */}
+            <Row className='m-2'>
                 <Col>
-
-                    {todasMaterias.map(mat => {
-                        return (
-                            <Row key={mat.id}>
-                                <Col>{mat.id}</Col>
-                                <Col>{mat.nombre}</Col>
-                                <Col>
-                                    <input type='checkbox'
-                                        id={mat.id}
-                                        onChange={handleChangeMateria}
-                                    />
-                                </Col>
-                                <Col>
-                                    <select disabled='true' name={mat.id} className='form-control-sm' onChange={handleChangeCuatrimestre} >
-                                        <option value={-1}> Seleccione </option>
-                                        <option value={1}> 1  </option>
-                                        <option value={2}> 2 </option>
-                                        <option value={3}> 3 </option>
-                                        <option value={4}> 4 </option>
-                                        <option value={5}> 5 </option>
-                                        <option value={6}> 6 </option>
-                                        <option value={7}> 7 </option>
-                                        <option value={8}> 8 </option>
-                                        <option value={9}> 9 </option>
-                                        <option value={10}> 10 </option>
-                                    </select>
-                                </Col>
-                            </Row>
-                        )
-                    })
-                    }
-
-
+                    <h2 className='text-primary fw-bolder text-start'>Alta de Carrera</h2>
                 </Col>
             </Row>
+            <Form>
+                <Row className='m-2'>
+                    <Col xs='12' sm='6' lg='4' >
+                        <label htmlFor='nombre' className='label'> Nombre </label>
+                        <input
+                            id='nombre'
+                            type="text"
+                            name="nombre"
+                            placeholder="Contador Publico"
+                            className='form-control '
+                            value={nombre}
+                            onChange={handleChange}
+                        />
+                    </Col>
+                    <Col xs='12' sm='6' lg='4' >
+                        <label htmlFor='nombreFacultad' className='label'> Facultad </label>
+                        <input
+                            id='nombreFacultad'
+                            type="text"
+                            name="nombreFacultad"
+                            placeholder="Economia"
+                            className='form-control '
+                            value={nombreFacultad}
+                            onChange={handleChange}
+                        />
+                    </Col>
+                </Row>
+                <Row className='mt-3'>
+                    <Col>
+                        <h3 className='text-primary'>Seleccion de materias</h3>
+                    </Col>
+                </Row>
+                <Row >
+                    <Col>
+                        <Row>
+                            <Col xs='3'> <b>Id Materia</b></Col>
+                            <Col xs='4'> <b>Materia</b></Col>
+                            <Col xs='2'> <b>Check</b></Col>
+                            <Col xs='3'> <b>Cuatrimestre</b></Col>
+                        </Row>
+                        {todasMaterias.map(mat => {
+                            return (
+                                <Row key={mat.id}>
+                                    <Col xs='3'>{mat.id}</Col>
+                                    <Col xs='4'>{mat.nombre}</Col>
+                                    <Col xs='2'>
+                                        <input type='checkbox'
+                                            id={mat.id}
+                                            onChange={handleChangeMateria}
+                                        />
+                                    </Col>
+                                    <Col xs='3'>
+                                        <select disabled='true' name={mat.id} className='form-control-sm' onChange={handleChangeCuatrimestre} >
+                                            <option value={-1}> Seleccione </option>
+                                            <option value={1}> 1  </option>
+                                            <option value={2}> 2 </option>
+                                            <option value={3}> 3 </option>
+                                            <option value={4}> 4 </option>
+                                            <option value={5}> 5 </option>
+                                            <option value={6}> 6 </option>
+                                            <option value={7}> 7 </option>
+                                            <option value={8}> 8 </option>
+                                            <option value={9}> 9 </option>
+                                            <option value={10}> 10 </option>
+                                        </select>
+                                    </Col>
+                                </Row>
+                            )
+                        })
+                        }
 
-            <Row className='justify-content-center m-2'>
-                <Col sm='6'>
-                    <Button className='w-100' onClick={handleSubmit} >Enviar</Button>
-                </Col>
-            </Row>
-        </Form>
+
+                    </Col>
+                </Row>
+
+                <Row className='justify-content-center m-2'>
+                    <Col sm='6'>
+                        <Button className='w-75' variant='success' onClick={handleSubmit} > Crear </Button>
+                    </Col>
+                </Row>
+            </Form>
+        </Container >
     );
 }
 

@@ -4,7 +4,7 @@ import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 const initialForm = {
     nombre: '',
     cargaHoraria: 0,
-    correlativas: 0
+    correlativas: -1
 }
 
 const URL = process.env.REACT_APP_BACKEND_CONNECTION + 'api/';
@@ -36,6 +36,9 @@ const AltaMateria = () => {
     }
 
     const handleSubmit = () => {
+        if (correlativas < 0) {
+            return;
+        }
         console.log(form)
         fetch(URL + 'Materias', {
             method: "POST",
@@ -62,11 +65,17 @@ const AltaMateria = () => {
 
 
     return (
-        <Container>
-            <Form>
+        <Container className='myminHeight'>
+            <Row>
+                <Col>
+                    <h2 className='text-primary fw-bolder text-start'>Alta de Materia</h2>
+                </Col>
+            </Row>
+
+            <Form className='mt-3'>
                 <Row>
                     <Col xs='12' sm='6' lg='4' >
-                        <label htmlFor='nombre' className='label'> Nombre </label>
+                        <label htmlFor='nombre' className='label'> Nombre de la materia </label>
                         <input
                             id='nombre'
                             type="text"
@@ -78,7 +87,7 @@ const AltaMateria = () => {
                         />
                     </Col>
                     <Col xs='12' sm='6' lg='4' >
-                        <label htmlFor='cargaHoraria' className='label'> cargaHoraria </label>
+                        <label htmlFor='cargaHoraria' className='label'> Carga Horaria </label>
                         <input
                             id='cargaHoraria'
                             type="number"
@@ -91,9 +100,10 @@ const AltaMateria = () => {
                         />
                     </Col>
                     <Col xs='12' sm='6' lg='4' >
-                        <label htmlFor='correlativas' className='label'> Materia </label>
+                        <label htmlFor='correlativas' className='label'> Materia Correlativa </label>
                         <select name='correlativas' value={correlativas} className='form-control' onChange={handleChange}>
                             <option className='form-control' value={-1}> Seleccione </option>
+                            <option className='form-control' value={0}> Sin correlativas </option>
                             {
                                 materias.length ? (
                                     materias.map((mat) => {
@@ -107,10 +117,7 @@ const AltaMateria = () => {
                 </Row>
                 <Row className='m-4'>
                     <Col>
-                        <Button className='w-75' variant='warning' > Cancelar </Button>
-                    </Col>
-                    <Col>
-                        <Button onClick={handleSubmit} className='w-75' variant='success'>Enviar</Button>
+                        <Button onClick={handleSubmit} className='w-75' variant='success'> Enviar </Button>
                     </Col>
                 </Row>
 

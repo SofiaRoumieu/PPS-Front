@@ -65,9 +65,13 @@ const CrearCurso = () => {
 
 
     return (
-        <Container>
+        <Container className='myminHeight'>
+            <Row>
+                <Col>
+                    <h2 className='text-primary fw-bolder text-start'>Alta de Curso</h2>
+                </Col>
+            </Row>
             <Form>
-
                 <Row>
                     <Col xs='12' sm='6' lg='4' >
                         <label htmlFor='idMateria' className='label'> Materia </label>

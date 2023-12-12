@@ -66,22 +66,17 @@ const UsuariosListado = () => {
 
     return (
         <Container>
-            <Row className='d-flex justify-content-between align-items-center mt-2'>
+            <Row className='d-flex justify-content-between  m-2'>
                 <Row>
-                    <Col>
-                        <h3 className='text-primary'>Listado de usuarios</h3>
+                    <Col className='text-start'>
+                        <h2 className='text-primary fw-bolder text-start'>Listado de usuarios</h2>
                     </Col>
-                </Row>
-                <Row>
-                    <Col >
-                        <Button variant='secondary' className='px-4'>Filtrar</Button>
-                    </Col>
-                    <Col>
+                    <Col className='text-end'>
                         <Button variant='success' onClick={() => navigate('/usuarios-alta')} >Nuevo usuario</Button>
                     </Col>
                 </Row>
             </Row>
-            <Table striped bordered hover className='mt-5'>
+            <Table striped bordered hover className='mt-4'>
                 <thead>
                     <tr>
                         <th>Legajo</th>

@@ -53,7 +53,6 @@ const CargaNotas = () => {
 
                 });
 
-                // setAlumnos(data);
             })
             .catch((err) => {
                 console.error(err);
@@ -70,16 +69,12 @@ const CargaNotas = () => {
     };
 
     const handleAccept = (e) => {
-
-        // console.log(curso)
         console.log(form)
         const notas = [];
         for (let j = 0; j < alumnos.length; j++) {
             const alumno = alumnos[j];
             for (let i = 1; i <= 5; i++) {
                 const nota = form[alumnos[j].legajo + '-' + i.toString()];
-                // console.log(alumnos[j].legajo+'-'+i.toString())
-                // console.log(alumno.legajo + '-' + i.toString(), form[alumnos[j].legajo + '-' + i.toString()])
 
                 if (nota != undefined && nota != null) {
                     let userNote = {
@@ -210,15 +205,15 @@ const CargaNotas = () => {
             </Table>
             <Row>
                 <Col md='6'>
-                    <Button className='mt-2 w-100' onClick={handleAccept} >Aceptar cambios</Button>
-                </Col>
-                <Col md='6'>
                     <Button variant="outline-primary"
                         onClick={() => navigate('/curso-detalle')}
                         type="button"
                         className='mt-2 w-100' >
                         Volver
                     </Button>
+                </Col>
+                <Col md='6'>
+                    <Button className='mt-2 w-100' onClick={handleAccept} >Aceptar cambios</Button>
                 </Col>
             </Row>
 

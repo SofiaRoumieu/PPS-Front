@@ -137,8 +137,18 @@ const AltaUsuario = (props) => {
 
     return (
         <Container>
-            <Card.Title style={{ textAlign: "left" }}>{(props.tipo == 'crear') ? 'Nuevo usuario' : 'Editar usuario'}</Card.Title>
-            <Card.Title style={{ textAlign: "left", fontSize: 18 }}>Datos personales</Card.Title>
+            <Row>
+                <Col>
+                    <h2 className='text-primary fw-bolder text-start'>Alta de Usuario</h2>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <h3 className='text-secondary text-start'>Datos Personales</h3>
+                </Col>
+            </Row>
+            {/* <Card.Title style={{ textAlign: "left" }}>{(props.tipo == 'crear') ? 'Nuevo usuario' : 'Editar usuario'}</Card.Title> */}
+            {/* <Card.Title style={{ textAlign: "left", fontSize: 18 }}>Datos personales</Card.Title> */}
 
             <Form>
                 <Row>
@@ -250,6 +260,13 @@ const AltaUsuario = (props) => {
                 <Row className='mt-4'>
                     <hr></hr>
                 </Row>
+
+                <Row>
+                    <Col>
+                        <h3 className='text-secondary text-start'>Datos del domicilio</h3>
+                    </Col>
+                </Row>
+
 
                 <Row>
                     <Col xs='12' sm='6' lg='4' >

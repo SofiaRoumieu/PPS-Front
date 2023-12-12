@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const URL = process.env.REACT_APP_BACKEND_CONNECTION + 'api/';
 
 const CargarAsistencia = () => {
 
+    const navigate = useNavigate();
     const [alumnos, setAlumnos] = useState([]);
     const [curso, setCurso] = useState(JSON.parse(localStorage.getItem('curso')));
 
@@ -119,14 +121,16 @@ const CargarAsistencia = () => {
             </Table>
             <Row>
                 <Col md='6'>
-                    <Button className='mt-2 w-100' onClick={handleAceptar} >Aceptar cambios</Button>
-                </Col>
-                <Col md='6'>
                     <Button variant="outline-primary"
                         type="button"
-                        className='mt-2 w-100' >
+                        className='mt-2 w-100'
+                        onClick={() => { navigate('/curso-detalle') }}
+                    >
                         Volver
                     </Button>
+                </Col>
+                <Col md='6'>
+                    <Button className='mt-2 w-100' onClick={handleAceptar} >Aceptar cambios</Button>
                 </Col>
             </Row>
 

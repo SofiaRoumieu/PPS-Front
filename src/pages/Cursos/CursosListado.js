@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Carousel, Button, Card, Dropdown, Modal } from 'react-bootstrap';
+import { Row, Col, Carousel, Button, Card, Dropdown, Modal, Container } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 //import {Edit as EditIcon, Tune as TuneIcon, Check as CheckIcon, Storage as StorageIcon, MoreVert as MoreVertIcon, Search as SearchIcon, Remove as RemoveIcon, Download as DownloadIcon, UploadFile as UploadFileIcon, FileUpload as FileUploadIcon, Campaign as CampaignIcon, Place as PlaceIcon } from '@mui/icons-material';
@@ -324,9 +324,9 @@ const CursosListado = (props) => {
         {
             name: "Acciones",
             cell: (row) => (
-                <div id={row.id} onClick={handleInscribir} >
+                <Button variant='secondary' className='btn-sm' id={row.id} onClick={handleInscribir} >
                     Inscribirme
-                </div>
+                </Button>
             ),
         }
     ];
@@ -353,9 +353,9 @@ const CursosListado = (props) => {
         {
             name: "Acciones",
             cell: (row) => (
-                <div key={row.id} id={row.id} onClick={handlePostularme} >
+                <Button variant='secondary' className='btn-sm' key={row.id} id={row.id} onClick={handlePostularme} >
                     Postularme
-                </div>
+                </Button>
             ),
         }
     ];
@@ -432,15 +432,20 @@ const CursosListado = (props) => {
                 draggable
                 pauseOnHover
             />
-            <Row style={{ paddingTop: 10, paddingLeft: 20 }}>
-                <h1 className='titulos'>{(props.tipo === "misCursos") ? "Listado de Mis cursos" : "Listado de cursos"}</h1>
-            </Row>
-            {
-                usuario.tipoUsuario == 3 &&
-                <Row style={{ paddingTop: 10, paddingLeft: 20 }}>
-                    <Button onClick={() => navigate('/cursos-crear')}  >Crear Curso</Button>
+            <Row className='d-flex justify-content-between  m-2 mb-4'>
+                <Row>
+                    <Col className='text-start'>
+                        <h2 className='text-primary fw-bolder text-start'>{(props.tipo === "misCursos") ? "Listado de Mis cursos" : "Listado de cursos"}</h2>
+                    </Col>
+                    {
+                        usuario.tipoUsuario == 3 &&
+                        <Col className='text-end'>
+                            <Button variant='success' onClick={() => navigate('/cursos-crear')}  >Nuevo Curso</Button>
+                        </Col>
+                    }
+
                 </Row>
-            }
+            </Row>
 
             <Modal show={showModalError} >
                 <Modal.Header >
@@ -497,7 +502,7 @@ const CursosListado = (props) => {
                 </Row>
 
                 : props.tipo === 'todos' ?
-                    <Row>
+                    <Container>
                         <DataTable
                             columns={columns}
                             data={cursos}
@@ -507,10 +512,10 @@ const CursosListado = (props) => {
                             paginationComponentOptions={dataTableStyles.paginationComponentOptions}
                             noDataComponent="No hay cursos para mostrar"
                         />
-                    </Row>
+                    </Container>
                     :
                     props.tipo === 'vacantes' ?
-                        <Row>
+                        <Container>
                             <DataTable
                                 columns={columnsVacantes}
                                 data={cursos}
@@ -520,46 +525,48 @@ const CursosListado = (props) => {
                                 paginationComponentOptions={dataTableStyles.paginationComponentOptions}
                                 noDataComponent="No hay cursos para mostrar"
                             />
-                        </Row>
+                        </Container>
                         :
-                        <Row >
-                            {
-                                cursos.map((curso) => {
-                                    return <Col xs={12} md={4} key={curso.id}>
-                                        <Card>
-                                            <Card.Header>
-                                                <Card.Title>
-                                                    {curso.materia}
-                                                </Card.Title>
-                                                {curso.estado == 'Finalizada' &&
-                                                    <Card.Subtitle style={{ color: '#FF0000' }} >
-                                                        Finalizada
-                                                    </Card.Subtitle>
-                                                }
-                                            </Card.Header>
-                                            <Card.Body>
-                                                <Card.Text>
-                                                    {curso.dia} - {curso.turno} - {curso.profesor}
-                                                </Card.Text>
-                                                <Card.Footer >
-                                                    <Button onClick={() => { localStorage.setItem('curso', JSON.stringify(curso)); navigate('/curso-detalle') }}>
-                                                        Ver curso
-                                                    </Button>
-                                                    {
-                                                        usuario.tipoUsuario == 1 && curso.estado != 'Finalizada' ?
-                                                            <Button value={curso.id} onClick={handleDarDeBaja}>
-                                                                Darme de baja
-                                                            </Button>
-                                                            : <></>
+                        <Container>
+                            <Row >
+                                {
+                                    cursos.map((curso) => {
+                                        return <Col xs={12} md={4} key={curso.id}>
+                                            <Card>
+                                                <Card.Header>
+                                                    <Card.Title>
+                                                        {curso.materia}
+                                                    </Card.Title>
+                                                    {curso.estado == 'Finalizada' &&
+                                                        <Card.Subtitle style={{ color: '#FF0000' }} >
+                                                            Finalizada
+                                                        </Card.Subtitle>
                                                     }
+                                                </Card.Header>
+                                                <Card.Body>
+                                                    <Card.Text>
+                                                        {curso.dia} - {curso.turno} - {curso.profesor}
+                                                    </Card.Text>
+                                                    <Card.Footer >
+                                                        <Button onClick={() => { localStorage.setItem('curso', JSON.stringify(curso)); navigate('/curso-detalle') }}>
+                                                            Ver curso
+                                                        </Button>
+                                                        {
+                                                            usuario.tipoUsuario == 1 && curso.estado != 'Finalizada' ?
+                                                                <Button value={curso.id} onClick={handleDarDeBaja}>
+                                                                    Darme de baja
+                                                                </Button>
+                                                                : <></>
+                                                        }
 
-                                                </Card.Footer>
-                                            </Card.Body>
-                                        </Card>
-                                    </Col>;
-                                })
-                            }
-                        </Row>
+                                                    </Card.Footer>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>;
+                                    })
+                                }
+                            </Row>
+                        </Container>
             }
         </div >
     );

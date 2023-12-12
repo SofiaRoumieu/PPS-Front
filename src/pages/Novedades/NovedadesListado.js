@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/Listado.css';
-import { Row, Col, Carousel, Button, Card } from 'react-bootstrap';
+import { Row, Col, Carousel, Button, Card, Container } from 'react-bootstrap';
 import campus from '../../assets/images/campus.png';
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
@@ -50,7 +50,7 @@ const NovedadesListado = () => {
     }, []);
 
     return (
-        <>
+        <Container className='mb-3'>
             {cargando ?
                 (<Spinner />)
                 :
@@ -67,14 +67,13 @@ const NovedadesListado = () => {
                         pauseOnHover
                     />
 
-                    <Row style={{ paddingTop: 10, paddingLeft: 20, marginBottom: 10 }}>
-                        <Col xs lg="10">
-                            <h1 className='titulos'>Listado de novedades</h1>
+                    <Row className='p-2' >
+                        <Col xs lg="8">
+                            <h3 className='text-primary text-start'>Listado de novedades</h3>
                         </Col>
                         {(usuario && usuario.legajo !== '' && usuario.tipoUsuario === 3) &&
-                            <Col xs lg="2">
+                            <Col xs lg="4">
                                 <Button
-                                    style={{ width: "100%", background: "#009AAE", borderColor: "#009AAE", color: "#FFFFFF" }}
                                     onClick={() => { navigate('/novedades-alta') }} >
                                     Nueva novedad
                                 </Button>
@@ -82,12 +81,12 @@ const NovedadesListado = () => {
                         }
                     </Row>
 
-                    <Row style={{ height: 150 }}>
+                    <Row >
                         <Carousel>
                             {novedades.map((novedad) => {
                                 return (novedad.carrucel === true) ?
                                     <Carousel.Item key={novedad.idNovedad} style={{ cursor: "pointer" }} onClick={() => { navigate('/novedades-detalle/' + novedad.idNovedad) }}   >
-                                        <img src={campus} style={{ height: 150, opacity: 0.3, width: "100%" }} alt={novedad.titulo}></img>
+                                        <img src={campus} style={{ height: '40vh', opacity: 0.3, width: "100%" }} alt={novedad.titulo}></img>
                                         <Carousel.Caption >
                                             <h4 style={{ color: "black" }}>{novedad.titulo}</h4>
                                             <p style={{ color: "rgba(26, 41, 26)" }}> {novedad.copete}</p>
@@ -97,20 +96,20 @@ const NovedadesListado = () => {
                             }
                         </Carousel>
                     </Row>
-                    <Row style={{ paddingTop: 10 }}>
+                    <Row >
                         {novedades.map((novedad) => {
-                            return <Col key={novedad.idNovedad}>
-                                <Card style={{ height: "325px" }}>
+                            return <Col className='p-2' xs='12' sm='6' key={novedad.idNovedad}>
+                                <Card className='h-100' >
                                     <Card.Title style={{ marginTop: 10 }}>
                                         {novedad.titulo}
                                     </Card.Title>
                                     <Card.Body>
-                                        <img src={campus} style={{ height: 150, opacity: 0.3, width: "100%" }} alt={novedad.titulo}></img>
+                                        <img className='w-100' src={campus} style={{ opacity: 0.3 }} alt={novedad.titulo}></img>
                                         <p>{novedad.copete}</p>
                                     </Card.Body>
-                                    <Card.Footer style={{ height: 55 }}>
+                                    <Card.Footer >
                                         <Button
-                                            style={{ width: "50%", background: "#009AAE", borderColor: "#009AAE", color: "#FFFFFF" }}
+                                            className='w-75'
                                             onClick={() => { navigate('/novedades-detalle/' + novedad.idNovedad) }} >
                                             Leer novedad
                                         </Button>
@@ -120,9 +119,9 @@ const NovedadesListado = () => {
                         })
                         }
                     </Row>
-                </div>
+                </div >
             }
-        </>
+        </Container>
     );
 }
 
