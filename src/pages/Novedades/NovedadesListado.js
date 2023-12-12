@@ -75,6 +75,7 @@ const NovedadesListado = () => {
                         {(usuario && usuario.legajo !== '' && usuario.tipoUsuario === 3) &&
                             <Col xs lg="4">
                                 <Button
+                                    variant='success'
                                     onClick={() => { navigate('/novedades-alta') }} >
                                     Nueva novedad
                                 </Button>

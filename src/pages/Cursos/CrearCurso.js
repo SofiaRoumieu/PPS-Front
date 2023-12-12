@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, Modal, Row } from 'react-bootstrap';
 
 const initialForm = {
     idMateria: -1,
     anio: 2023,
     cuatrimestre: -1,
     dia: -1,
-    turno: -1
+    turno: -1,
+    maxAlumnos: 0
 }
 const URL = process.env.REACT_APP_BACKEND_CONNECTION + 'api/';
 
@@ -14,8 +15,10 @@ const CrearCurso = () => {
 
     const [form, setForm] = useState(initialForm);
     const [materias, setMaterias] = useState([]);
-    const { idMateria, anio, cuatrimestre, dia, turno } = form;
+    const { idMateria, anio, cuatrimestre, dia, turno, maxAlumnos } = form;
 
+    const [showModalMensaje, setShowModalMensaje] = useState(false);
+    const [modalData, setModalData] = useState({ title: '', text: '' });
     const handleChange = (e) => {
         setForm((form) => ({ ...form, [e.target.name]: e.target.value }));
         console.log(form);
@@ -25,6 +28,12 @@ const CrearCurso = () => {
     };
     const handleSubmit = () => {
         console.log(form)
+        if (turno == -1 || dia == -1 || idMateria == -1 || cuatrimestre == -1) {
+            setModalData({ title: 'Error', text: 'Debe completar todos los campos.' });
+            setShowModalMensaje(true);
+            return;
+        }
+
         fetch(URL + 'Cursos', {
             method: "POST",
             headers: {
@@ -35,9 +44,14 @@ const CrearCurso = () => {
             .then((res) => res.json())
             .then((data) => {
                 console.log(data)
-                // setMaterias(data);
+                setModalData({ title: 'Exito', text: 'Se creo el curso.' });
+                setShowModalMensaje(true);
+                window.location.assign("/administrar-cursos");
             })
-            .catch(ex => console.log(ex))
+            .catch(ex => {
+                setModalData({ title: 'Error', text: 'Ha ocurrido un error.' });
+                setShowModalMensaje(true);
+            })
 
     };
 
@@ -124,6 +138,20 @@ const CrearCurso = () => {
                             <option value={3}> Noche </option>
                         </select>
                     </Col>
+                    <Col xs='12' sm='6' lg='4' >
+                        <label htmlFor='maxAlumnos' className='label'> Vacantes </label>
+                        <input
+                            id='maxAlumnos'
+                            type="number"
+                            name="maxAlumnos"
+                            className='form-control '
+                            min={1}
+                            max={35}
+                            value={maxAlumnos}
+                            onChange={handleChange}
+                        />
+
+                    </Col>
                 </Row>
 
                 <Row className='m-4'>
@@ -136,6 +164,21 @@ const CrearCurso = () => {
                 </Row>
 
             </Form>
+
+            <Modal show={showModalMensaje} >
+                <Modal.Header >
+                    <Modal.Title>
+                        {modalData.title}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {modalData.text}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button className='btn-secondary' onClick={() => setShowModalMensaje(false)} >Aceptar</Button>
+                </Modal.Footer>
+            </Modal>
+
         </Container>
     );
 }

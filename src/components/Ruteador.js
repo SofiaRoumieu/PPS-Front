@@ -20,6 +20,7 @@ import CargarAsistencia from "../pages/Asistencias/CargarAsistencias";
 import AltaCarrera from "../pages/Carreras/AltaCarrera";
 import AltaMateria from "../pages/Materias/MateriasForm";
 import CambiarClave from "../pages/Usuarios/CambiarClave";
+import ListadoAsistencias from "../pages/Asistencias/ListadoAsistencias";
 
 
 
@@ -58,6 +59,7 @@ const Ruteador = () => {
                 <Route path="/novedades-editar" element={<NovedadesForm tipo="crear" />} />
 
                 <Route path="/usuarios-listado" element={<UsuariosListado />} />
+                <Route path="/mis-asistencias" element={<ListadoAsistencias />} />
                 <Route path="/cambiar-clave" element={<CambiarClave />} />
                 <Route path="/usuarios-alta" element={<AltaUsuario tipo='crear' />} />
                 <Route path="/usuarios-modificar/:legajo" element={<AltaUsuario tipo='modificar' />} />

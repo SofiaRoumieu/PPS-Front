@@ -50,6 +50,9 @@ const Header = () => {
                             {(usuario && usuario.legajo !== '' && (usuario.tipoUsuario === 1)) &&
                                 <Nav.Link href="/notas">Mis Notas</Nav.Link>
                             }
+                            {(usuario && usuario.tipoUsuario === 1) &&
+                                <Nav.Link href="/mis-asistencias">Mis asistencias</Nav.Link>
+                            }
                             {(usuario && usuario.legajo !== '' && usuario.tipoUsuario === 3) &&
                                 <NavDropdown title="Administracion" id="basic-nav-dropdown">
                                     <NavDropdown.Item href="/usuarios-listado"> Usuarios </NavDropdown.Item>
