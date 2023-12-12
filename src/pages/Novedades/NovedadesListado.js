@@ -34,7 +34,8 @@ const NovedadesListado = () => {
                                     idNovedad: novedad.id,
                                     titulo: novedad.titulo,
                                     copete: novedad.copete,
-                                    carrucel: (novedad.snMostrar == 1) ? true : false
+                                    carrucel: (novedad.snMostrar == 1) ? true : false,
+                                    imagen: novedad.imagen
                                 }
                             ];
                         });
@@ -86,7 +87,7 @@ const NovedadesListado = () => {
                             {novedades.map((novedad) => {
                                 return (novedad.carrucel === true) ?
                                     <Carousel.Item key={novedad.idNovedad} style={{ cursor: "pointer" }} onClick={() => { navigate('/novedades-detalle/' + novedad.idNovedad) }}   >
-                                        <img src={campus} style={{ height: '40vh', opacity: 0.3, width: "100%" }} alt={novedad.titulo}></img>
+                                        <img src={"data:image/jpeg;base64," + novedad.imagen} style={{ height: '40vh', opacity: 0.3, width: "100%" }} alt={novedad.titulo}></img>
                                         <Carousel.Caption >
                                             <h4 style={{ color: "black" }}>{novedad.titulo}</h4>
                                             <p style={{ color: "rgba(26, 41, 26)" }}> {novedad.copete}</p>
@@ -104,7 +105,7 @@ const NovedadesListado = () => {
                                         {novedad.titulo}
                                     </Card.Title>
                                     <Card.Body>
-                                        <img className='w-100' src={campus} style={{ opacity: 0.3 }} alt={novedad.titulo}></img>
+                                        <img className='w-100' src={"data:image/jpeg;base64," + novedad.imagen} style={{ opacity: 0.3 }} alt={novedad.titulo}></img>
                                         <p>{novedad.copete}</p>
                                     </Card.Body>
                                     <Card.Footer >

@@ -74,41 +74,38 @@ const NovedadForm = (props) => {
 
         let urlEndpoint = '';
         let accion = '';
-        let mensajeConfirmación
+        let mensajeConfirmacion;
         if (id) {
             urlEndpoint = 'api/Novedades/EditarNovedad/' + id;
             accion = "PUT";
-            mensajeConfirmación = "Novedad modificada correctamente";
+            mensajeConfirmacion = "Novedad modificada correctamente";
         }
         else {
             urlEndpoint = 'api/Novedades';
             accion = "POST";
-            mensajeConfirmación = "Novedad creada correctamente";
+            mensajeConfirmacion = "Novedad creada correctamente";
         }
 
         var formData = new FormData();
-        formData.append('novedad', JSON.stringify(data));
 
         for (let index = 0; index < archivos.length; index++) {
             formData.append("file", archivos[index]);
             console.log(archivos[index])
         }
-        console.log('envio', formData);
-        for (var p of formData) {
-            console.log(p);
-        }
+        formData.append('titulo', data.Titulo);
+        formData.append('copete', data.Copete);
+        formData.append('texto', data.Texto);
+        formData.append('snMostrar', data.Carrucel);
 
 
         fetch(URL + urlEndpoint, {
             method: accion,
-            headers: {
-                "Content-Type": "Application/json"
-            },
+
             body: formData
         })
             .then(res => res.json())
             .then((data) => {
-                alert(mensajeConfirmación);
+                alert(mensajeConfirmacion);
             })
             .catch(err => console.log(err))
             .finally(() => {
@@ -116,7 +113,6 @@ const NovedadForm = (props) => {
 
         setButtonDisabled(false);
     }
-
     const subirArchivos = archivos => {
         setMostrarErrorFoto([]);
         let errors = [];
@@ -179,7 +175,7 @@ const NovedadForm = (props) => {
                                                 <Card.Body>
                                                     <Card.Title>{novedad.titulo}</Card.Title>
                                                     <Card.Subtitle style={{ marginTop: 5 }} className="mb-2">{novedad.copete}</Card.Subtitle>
-                                                    <Card.Img src={campus} alt={novedad.titulo} />
+                                                    <Card.Img src={"data:image/jpeg;base64," + novedad.imagen} alt={novedad.titulo} />
                                                     <Card.Text>
                                                         {novedad.texto}
                                                     </Card.Text>
