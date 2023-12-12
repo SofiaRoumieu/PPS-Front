@@ -51,7 +51,12 @@ function Login() {
           });
 
         localStorage.setItem("usuario", JSON.stringify(data));
-        window.location.assign("/");
+        if (data.modificoClave == 0) {
+          window.location.assign("/cambiar-clave");
+        }
+        else {
+          window.location.assign("/");
+        }
       })
       .catch((err) => {
         console.error('errror', err);
