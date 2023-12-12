@@ -28,8 +28,10 @@ const NotasListado = () => {
     }, []);
     return (
         <Container className='mt-3'>
-            <Row>
-                <h1>Listado de notas finales</h1>
+            <Row className='p-2'>
+                <Col xs lg="8">
+                    <h2 className='text-primary fw-bolder text-start'> Estado Academico </h2>
+                </Col>
             </Row>
             {
                 listaNotas.length > 0 ?

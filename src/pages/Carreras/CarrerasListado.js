@@ -82,6 +82,16 @@ const CarrerasListado = () => {
                         }
                     </>
             }
+            <Row className='p-2 mt-4'>
+                <Col className=''>
+                    <h3 className='text-secondary text-start'> Requisitos para la inscripcion </h3>
+                    <ul className='text-start'>
+                        <li>Presentar DNI original y fotocopia.</li>
+                        <li>Presentar constancia de alumno regular (si todavía estás cursando tus estudios secundarios), certificado de Estudios Secundarios Completos (acompañando el original) o certificado de título en trámite, emitido por el establecimiento del que egresaste o en el cual cursás actualmente</li>
+                        <li>Enviar fotografía digital en formato .JPG/.JPEG al mail de contacto.</li>
+                    </ul>
+                </Col>
+            </Row>
         </Container>
     );
 }

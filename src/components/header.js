@@ -24,7 +24,9 @@ const Header = () => {
         <>
             <Navbar collapseOnSelect expand="md" variant='dark' bg="dark" data-bs-theme="dark">
                 <Container fluid>
-                    <Navbar.Brand href="/">Navbar</Navbar.Brand>
+                    <Navbar.Brand href="/">
+                        <img className='imgg' src='https://www.designevo.com/res/templates/thumb_small/banner-and-educational-supplies-shield.webp'></img>
+                    </Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className='me-auto d-flex justify-content-between align-items-center'>

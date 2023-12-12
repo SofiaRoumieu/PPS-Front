@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, Modal, Row } from 'react-bootstrap';
 
 
 const initialForm = {
@@ -9,7 +9,11 @@ const initialForm = {
 }
 const URL = process.env.REACT_APP_BACKEND_CONNECTION + 'api/';
 
+const initModalData = { title: '', text: '' }
+
 const AltaCarrera = () => {
+    const [showModal, setShowModal] = useState(false);
+    const [modalData, setModalData] = useState(initModalData);
 
     const [form, setForm] = useState(initialForm)
     const [todasMaterias, setTodasMaterias] = useState([]);
@@ -82,6 +86,24 @@ const AltaCarrera = () => {
     }
 
     const postCarrera = () => {
+        let error = false;
+        if (form.materias.length < 5) {
+            setShowModal(true);
+            setModalData({ title: 'Error', text: 'La carrera debe tener al menos 5 materias' });
+            console.log("pedro")
+            error = true;
+        }
+        form.materias.forEach(element => {
+            if (element.cuatrimestre == -1) {
+                setShowModal(true);
+                setModalData({ title: 'Error', text: 'Todas las materias deben pertenecer a un cuatrimestre.' });
+                error = true;
+            }
+        });
+
+        if (error)
+            return;
+
         let data = {
             facultad: nombreFacultad,
             nombre: form.nombre,
@@ -97,10 +119,12 @@ const AltaCarrera = () => {
         })
             .then((res) => res.ok ? res.json() : Promise.reject(res))
             .then((data) => {
-                console.log('ssss', data);
-                // handleReset();
+                setShowModal(true);
+                setModalData({ title: 'Exito', text: 'La carrera se dio de alta con exito.' });
+                console.log('carreraNueva', data);
             })
             .catch((err) => {
+                setModalData({ title: 'Error', text: 'Ha ocurrido un error.' });
                 console.error(err);
             })
             .finally(() => {
@@ -209,6 +233,21 @@ const AltaCarrera = () => {
                     </Col>
                 </Row>
             </Form>
+
+            <Modal show={showModal} >
+                <Modal.Header >
+                    <Modal.Title>
+                        {modalData.title}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {modalData.text}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button className='btn-secondary' onClick={() => setShowModal(false)} >Aceptar</Button>
+                </Modal.Footer>
+            </Modal>
+
         </Container >
     );
 }

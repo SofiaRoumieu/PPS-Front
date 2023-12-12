@@ -21,6 +21,12 @@ const Footer = () => {
                             </Row>
                             <Row>
                                 <span className='text-start'>
+                                    <b> Horario de atencion: </b>Lunes a Viernes de 8:30hs a 20:30hs
+                                </span>
+                            </Row>
+
+                            <Row>
+                                <span className='text-start'>
                                     <b>Mail:</b> tecnicaturas@fra.utn.edu.ar
                                 </span>
                             </Row>

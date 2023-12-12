@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Col, Container, Dropdown, Form, Row } from 'react-bootstrap';
+import { Button, Card, Col, Container, Dropdown, Form, Modal, Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
 
@@ -22,12 +22,19 @@ const initialForm = {
     departamento: "-"
 }
 const URL = process.env.REACT_APP_BACKEND_CONNECTION + 'api/';
+const initModalData = {
+    title: '',
+    text: ''
+}
 
 const AltaUsuario = (props) => {
 
     const [form, setForm] = useState(initialForm)
     const [carreras, setCarreras] = useState([]);
     const { nombre, apellido, correo, dni, tipoUsuario, fechaNacimiento, carrera, sexo, provincia, localidad, codigoPostal, calle, altura, piso, departamento } = form;
+
+    const [showModal, setShowModal] = useState(false);
+    const [modalData, setModalData] = useState(initModalData);
 
     const { legajo } = useParams();
 
@@ -52,18 +59,15 @@ const AltaUsuario = (props) => {
         }
 
 
-        let urlEndpoint = '';
         let accion = '';
         let mensajeConfirmacion = '';
         if (legajo) {
-            //urlEndpoint = 'api/Usuarios/EditarNovedad/' + id;
             usuario.user.legajo = legajo;
             usuario.domicilio.id = form.idDomicilio;
             accion = "PUT";
             mensajeConfirmacion = "Usuario modificado correctamente";
         }
         else {
-            //urlEndpoint = 'api/Usuarios/CrearUsuario';
             accion = "POST";
             mensajeConfirmacion = "Usuario creado correctamente";
         }
@@ -80,11 +84,15 @@ const AltaUsuario = (props) => {
             .then((res) => res.ok ? res.json() : Promise.reject(res))
             .then((data) => {
                 console.log('ssss', data);
+                setModalData({ title: 'Exito', text: mensajeConfirmacion });
+                setShowModal(true);
                 console.log('', mensajeConfirmacion)
                 handleReset();
             })
             .catch((err) => {
                 console.error(err);
+                setModalData({ title: 'Error', text: 'Ocurrio un error. Reintente' });
+                setShowModal(true);
             })
             .finally(() => {
             });
@@ -367,6 +375,20 @@ const AltaUsuario = (props) => {
                 </Row>
 
             </Form>
+            <Modal show={showModal} >
+                <Modal.Header >
+                    <Modal.Title>
+                        {modalData.title}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {modalData.text}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button className='btn-secondary' onClick={() => setShowModal(false)} >Aceptar</Button>
+                </Modal.Footer>
+            </Modal>
+
         </Container>
 
     );

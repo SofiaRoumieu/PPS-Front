@@ -1,19 +1,24 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import '../../styles/Detalle.css';
-import { Row, Col, Button, Breadcrumb, Card, Spinner, Form, Container, } from 'react-bootstrap';
+import { Row, Col, Button, Breadcrumb, Card, Spinner, Form, Container, Modal, } from 'react-bootstrap';
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import { Formik, Field, ErrorMessage } from "formik";
-import campus from '../../assets/images/campus.png';
 import moment from "moment";
 
 
+const initModalData = {
+    title: '',
+    text: ''
+}
 const NovedadForm = (props) => {
     const URL = process.env.REACT_APP_BACKEND_CONNECTION;
     const navigate = useNavigate();
     const { id } = useParams();
+    const [showModal, setShowModal] = useState(false);
+    const [modalData, setModalData] = useState(initModalData);
 
     const [novedad, setNovedad] = useState({ IdNovedad: '', Titulo: '', Texto: '', FechaPublicacion: '', Carrucel: false, Foto: '' });
     const [cargando, setCargando] = useState(false);
@@ -34,7 +39,6 @@ const NovedadForm = (props) => {
     });
 
     useEffect(() => {
-
         setCargando(true);
         switch (props.tipo) {
             case "crear":
@@ -100,19 +104,32 @@ const NovedadForm = (props) => {
 
         fetch(URL + urlEndpoint, {
             method: accion,
-
             body: formData
         })
-            .then(res => res.json())
-            .then((data) => {
-                alert(mensajeConfirmacion);
+            .then(async res => {
+                if (res.ok)
+                    return res.json()
+                let errmsg = await res.text();
+                console.log(errmsg)
+                throw new Error(errmsg)
             })
-            .catch(err => console.log(err))
+            .then((data) => {
+                console.log(data);
+                let titulo = data.status == 200 ? 'Exito' : 'Error';
+                setModalData({ title: titulo, text: data.message });
+                setShowModal(true);
+                window.location.assign("/novedades");
+            })
+            .catch(err => {
+                setModalData({ title: 'Error', text: 'Ocurrio un error' });
+                setShowModal(true);
+            })
             .finally(() => {
             })
 
         setButtonDisabled(false);
     }
+
     const subirArchivos = archivos => {
         setMostrarErrorFoto([]);
         let errors = [];
@@ -323,6 +340,20 @@ const NovedadForm = (props) => {
                         </>}
                 </div>
             }
+            <Modal show={showModal} >
+                <Modal.Header >
+                    <Modal.Title>
+                        {modalData.title}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {modalData.text}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button className='btn-secondary' onClick={() => setShowModal(false)} >Aceptar</Button>
+                </Modal.Footer>
+            </Modal>
+
         </Container>
     );
 }

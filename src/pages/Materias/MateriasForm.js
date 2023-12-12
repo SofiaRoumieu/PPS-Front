@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, Modal, Row } from 'react-bootstrap';
 
 const initialForm = {
     nombre: '',
     cargaHoraria: 0,
     correlativas: -1
 }
-
+const initModalData = { title: '', text: '' };
 const URL = process.env.REACT_APP_BACKEND_CONNECTION + 'api/';
 const AltaMateria = () => {
+    const [showModal, setShowModal] = useState(false);
+    const [modalData, setModalData] = useState(initModalData);
 
     const [form, setForm] = useState(initialForm)
     const { nombre, cargaHoraria, correlativas } = form;
@@ -37,6 +39,8 @@ const AltaMateria = () => {
 
     const handleSubmit = () => {
         if (correlativas < 0) {
+            setModalData({ title: 'Error', text: 'Debe seleccionar si tiene o no correlativas.' });
+            setShowModal(true);
             return;
         }
         console.log(form)
@@ -50,12 +54,16 @@ const AltaMateria = () => {
             .then((res) => res.json())
             .then((data) => {
                 console.log(data)
+                setModalData({ title: 'Exito', text: 'La Materia se dio de alta con exito.' });
+                setShowModal(true);
+                setForm(initialForm);
             })
-            .catch(ex => console.log(ex))
-
+            .catch(ex => {
+                setModalData({ title: 'Error', text: 'Ha ocurrido un error.' });
+                setShowModal(true);
+                console.log(ex)
+            })
     };
-
-
 
 
     const handleChange = (e) => {
@@ -122,6 +130,21 @@ const AltaMateria = () => {
                 </Row>
 
             </Form>
+            <Modal show={showModal} >
+                <Modal.Header >
+                    <Modal.Title>
+                        {modalData.title}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {modalData.text}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button className='btn-secondary' onClick={() => setShowModal(false)} >Aceptar</Button>
+                </Modal.Footer>
+            </Modal>
+
+
         </Container>
     );
 }
