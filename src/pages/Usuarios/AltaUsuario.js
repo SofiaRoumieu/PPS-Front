@@ -1,5 +1,7 @@
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Dropdown, Form, Row } from 'react-bootstrap';
+import { Button, Card, Col, Container, Dropdown, Form, Row } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 
 
 const initialForm = {
@@ -21,12 +23,13 @@ const initialForm = {
 }
 const URL = process.env.REACT_APP_BACKEND_CONNECTION + 'api/';
 
-const AltaUsuario = () => {
+const AltaUsuario = (props) => {
 
     const [form, setForm] = useState(initialForm)
     const [carreras, setCarreras] = useState([]);
     const { nombre, apellido, correo, dni, tipoUsuario, fechaNacimiento, carrera, sexo, provincia, localidad, codigoPostal, calle, altura, piso, departamento } = form;
 
+    const { legajo } = useParams();
 
     const handleChange = (e) => {
         setForm((form) => ({ ...form, [e.target.name]: e.target.value }));
@@ -48,9 +51,27 @@ const AltaUsuario = () => {
             domicilio
         }
 
+
+        let urlEndpoint = '';
+        let accion = '';
+        let mensajeConfirmacion = '';
+        if (legajo) {
+            //urlEndpoint = 'api/Usuarios/EditarNovedad/' + id;
+            usuario.user.legajo = legajo;
+            usuario.domicilio.id = form.idDomicilio;
+            accion = "PUT";
+            mensajeConfirmacion = "Usuario modificado correctamente";
+        }
+        else {
+            //urlEndpoint = 'api/Usuarios/CrearUsuario';
+            accion = "POST";
+            mensajeConfirmacion = "Usuario creado correctamente";
+        }
+
+
         console.log(usuario);
         fetch(URL + 'Usuarios', {
-            method: "POST",
+            method: accion,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -59,6 +80,7 @@ const AltaUsuario = () => {
             .then((res) => res.ok ? res.json() : Promise.reject(res))
             .then((data) => {
                 console.log('ssss', data);
+                console.log('', mensajeConfirmacion)
                 handleReset();
             })
             .catch((err) => {
@@ -66,13 +88,35 @@ const AltaUsuario = () => {
             })
             .finally(() => {
             });
+    }
+
+    const getUsuario = () => {
+        fetch(URL + 'Usuarios/' + legajo)
+            .then((res) => res.ok ? res.json() : Promise.reject(res))
+            .then((data) => {
+                console.log(data);
+                let usuario = data.user;
+                let domicilio = data.domicilio;
+                let nuevoForm = { ...usuario, ...domicilio }
+
+                nuevoForm.fechaNacimiento = moment(usuario.fechaNacimiento).utc().format('yyyy-MM-DD');
+                console.log(nuevoForm);
+
+                setForm(nuevoForm)
+            })
+            .catch((err) => {
+                console.error(err);
+            });
 
     }
 
-
     useEffect(() => {
         getCarreras()
+        if (props.tipo == 'modificar') {
+            getUsuario();
+        }
     }, []);
+
 
     const getCarreras = () => {
         fetch(URL + 'Carreras', {
@@ -93,6 +137,9 @@ const AltaUsuario = () => {
 
     return (
         <Container>
+            <Card.Title style={{ textAlign: "left" }}>{(props.tipo == 'crear') ? 'Nuevo usuario' : 'Editar usuario'}</Card.Title>
+            <Card.Title style={{ textAlign: "left", fontSize: 18 }}>Datos personales</Card.Title>
+
             <Form>
                 <Row>
                     <Col xs='12' sm='6' lg='4' >
@@ -100,6 +147,7 @@ const AltaUsuario = () => {
                         <input
                             id='nombre'
                             type="text"
+                            disabled={props.tipo != 'crear'}
                             name="nombre"
                             placeholder="Ingrese Nombre..."
                             className='form-control '
@@ -111,6 +159,7 @@ const AltaUsuario = () => {
                         <label htmlFor='apellido' className='label'> Apellido </label>
                         <input
                             id='apellido'
+                            disabled={props.tipo != 'crear'}
                             type="text"
                             name="apellido"
                             placeholder="Ingrese apellido..."
@@ -138,6 +187,7 @@ const AltaUsuario = () => {
                         <label htmlFor='dni' className='label'> DNI </label>
                         <input
                             id='dni'
+                            disabled={props.tipo != 'crear'}
                             type="number"
                             name="dni"
                             placeholder="Ingrese dni..."
@@ -148,7 +198,7 @@ const AltaUsuario = () => {
                     </Col>
                     <Col xs='12' sm='6' lg='3' >
                         <label htmlFor='tipoUsuario' className='label'> Tipo de Usuario </label>
-                        <select name="tipoUsuario" id='tipoUsuario' className='form-control' value={tipoUsuario} onChange={handleChange} >
+                        <select name="tipoUsuario" id='tipoUsuario' className='form-control' disabled={props.tipo != 'crear'} value={tipoUsuario} onChange={handleChange} >
                             <option value={-1}> Seleccione </option>
                             <option value={1}> Alumno </option>
                             <option value={2}> Profesor </option>
@@ -156,12 +206,12 @@ const AltaUsuario = () => {
                         </select>
                     </Col>
                     <Col xs='12' sm='6' lg='3' >
-                        <label htmlFor='fechaNacimiento' className='label'> Fehca de Nacimiento </label>
+                        <label htmlFor='fechaNacimiento' className='label'> Fecha de Nacimiento </label>
                         <input
                             id='fechaNacimiento'
                             type="date"
+                            disabled={props.tipo != 'crear'}
                             name="fechaNacimiento"
-                            placeholder="Ingrese fechaNacimiento..."
                             className='form-control '
                             value={fechaNacimiento}
                             onChange={handleChange}
@@ -169,7 +219,7 @@ const AltaUsuario = () => {
                     </Col>
                     <Col xs='12' sm='6' lg='3' >
                         <label htmlFor='sexo' className='label'> Sexo </label>
-                        <select name="sexo" id='sexo' className='form-control' value={sexo} onChange={handleChange} >
+                        <select disabled={props.tipo != 'crear'} name="sexo" id='sexo' className='form-control' value={sexo} onChange={handleChange} >
                             <option value={-1}> Seleccione </option>
                             <option value={1}> Masculino </option>
                             <option value={2}> Femenino </option>
@@ -178,7 +228,7 @@ const AltaUsuario = () => {
                     </Col>
                     <Col xs='12' sm='6' lg='3' >
                         <label htmlFor='carrera' className='label'> Carrera </label>
-                        <select name='carrera' value={carrera} className='form-control' onChange={handleChange}>
+                        <select disabled={props.tipo != 'crear'} name='carrera' value={carrera} className='form-control' onChange={handleChange}>
                             <option className='form-control' value={-1}> Seleccione </option>
                             {
                                 carreras.length ? (

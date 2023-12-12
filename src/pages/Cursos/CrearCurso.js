@@ -47,7 +47,7 @@ const CrearCurso = () => {
     }, []);
 
     const getMaterias = () => {
-        fetch(URL + 'Publico/Materias', {
+        fetch(URL + 'Materias', {
             method: "GET",
             headers: {
                 "Content-Type": "Application/json",

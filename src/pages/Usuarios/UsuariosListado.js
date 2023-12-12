@@ -49,7 +49,7 @@ const UsuariosListado = () => {
         let data = {
             legajo: e.target.id
         }
-        fetch(URL + 'api/Usuarios', {
+        fetch(URL + 'api/Usuarios/ModificarEstado', {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
@@ -112,6 +112,7 @@ const UsuariosListado = () => {
                                         </Dropdown.Toggle>
 
                                         <Dropdown.Menu>
+                                            <Dropdown.Item onClick={() => navigate('/usuarios-modificar/' + usuario.legajo)} id={usuario.legajo}  > Modificar </Dropdown.Item>
                                             {usuario.estado == 1 && <Dropdown.Item onClick={handleHabilitar} id={usuario.legajo}  > Deshabilitar </Dropdown.Item>}
                                             {usuario.estado == 0 && <Dropdown.Item onClick={handleHabilitar} id={usuario.legajo}  > Habilitar </Dropdown.Item>}
                                         </Dropdown.Menu>

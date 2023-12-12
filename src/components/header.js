@@ -52,6 +52,8 @@ const Header = () => {
                                 <NavDropdown title="Administracion" id="basic-nav-dropdown">
                                     <NavDropdown.Item href="/usuarios-listado"> Usuarios </NavDropdown.Item>
                                     <NavDropdown.Item href="/administrar-cursos"> Cursos </NavDropdown.Item>
+                                    <NavDropdown.Item href="/carrera-alta"> Alta de carrera </NavDropdown.Item>
+                                    <NavDropdown.Item href="/materia-alta"> Alta de Materia </NavDropdown.Item>
                                 </NavDropdown>
                             }
                         </Nav>

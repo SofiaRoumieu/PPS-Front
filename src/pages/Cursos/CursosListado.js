@@ -151,7 +151,7 @@ const CursosListado = (props) => {
             .catch(ex => console.log(ex))
     }
     const getCursadasParaInscribir = () => {
-        fetch(URL + 'Cursos/ParaInscribir', {
+        fetch(URL + 'Cursos/ParaInscribir/' + usuario.idCarrera, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json'
